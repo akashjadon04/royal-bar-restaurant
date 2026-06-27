@@ -21,9 +21,12 @@ export async function addProduct(data: FormData) {
   
   const slug = name.toLowerCase().replace(/ /g, '-')
 
-  const defaultCategory = await prisma.category.findFirst()
-  
-  if (!defaultCategory) throw new Error("No categories found")
+  let defaultCategory = await prisma.category.findFirst()
+  if (!defaultCategory) {
+    defaultCategory = await prisma.category.create({
+      data: { name: "General", slug: "general" }
+    })
+  }
 
   await prisma.menuItem.create({
     data: {

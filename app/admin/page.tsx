@@ -88,7 +88,7 @@ export default async function AdminDashboard() {
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Chart (Feature 4) */}
-        <div className="lg:col-span-2 bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+        <div className="lg:col-span-2 bg-white p-6 rounded-xl shadow-sm border border-gray-100 flex flex-col">
           <div className="flex justify-between items-center mb-6">
             <h3 className="text-lg font-bold text-gray-900">Revenue Analytics</h3>
             <select className="bg-gray-50 border border-gray-200 text-sm rounded-lg px-3 py-1.5 focus:ring-red-500 focus:border-red-500">
@@ -97,8 +97,16 @@ export default async function AdminDashboard() {
               <option>This Year</option>
             </select>
           </div>
-          <div className="h-72 w-full">
-            <DashboardChart revenueData={revenueData} />
+          <div className="flex-1 w-full flex items-center justify-center min-h-[288px]">
+            {totalOrders > 0 ? (
+              <DashboardChart revenueData={revenueData} />
+            ) : (
+              <div className="text-center w-full flex flex-col items-center">
+                <LottiePlayer src="/lottie/anim_2.json" className="w-48 h-48 mx-auto" />
+                <h4 className="text-lg font-bold text-gray-700 mt-2">Awaiting First Sale</h4>
+                <p className="text-sm text-gray-500">No revenue data to display yet.</p>
+              </div>
+            )}
           </div>
         </div>
 
