@@ -49,16 +49,8 @@ export default function CategoryCards() {
           </h2>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
-          {categories.map((category) => (
-            <Atropos
-              key={category.id}
-              className="w-full h-[240px] md:h-[320px] rounded-2xl cursor-pointer"
-              activeOffset={40}
-              shadowScale={1.05}
-              highlight={true}
-              // @ts-ignore - Disable touch interactions on mobile to restore native scroll
-              touch={false}
-            >
+          {categories.map((category) => {
+            const CardContent = () => (
               <Link href={category.href} className="block w-full h-full relative rounded-2xl overflow-hidden group border border-white/20">
                 {/* Background Layer */}
                 <div className="absolute inset-0 z-0" data-atropos-offset="-5">
@@ -97,8 +89,29 @@ export default function CategoryCards() {
                   </p>
                 </div>
               </Link>
-            </Atropos>
-          ))}
+            );
+
+            return (
+              <div key={category.id} className="relative w-full h-[240px] md:h-[320px]">
+                {/* Mobile View: Native Scroll, No Atropos */}
+                <div className="md:hidden w-full h-full rounded-2xl overflow-hidden shadow-card-hover">
+                  <CardContent />
+                </div>
+                
+                {/* Desktop View: 3D Atropos Effect */}
+                <div className="hidden md:block w-full h-full">
+                  <Atropos
+                    className="w-full h-full rounded-2xl cursor-pointer"
+                    activeOffset={40}
+                    shadowScale={1.05}
+                    highlight={true}
+                  >
+                    <CardContent />
+                  </Atropos>
+                </div>
+              </div>
+            );
+          })}
         </div>
       </div>
     </section>
