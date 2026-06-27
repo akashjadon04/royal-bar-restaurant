@@ -15,13 +15,12 @@ export default function SignIn() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const res = await signIn('credentials', {
-      redirect: false,
+      redirect: true,
+      callbackUrl: '/',
       email,
       password,
     });
-    if (res?.ok) {
-      router.push('/');
-    } else {
+    if (res?.error) {
       alert('Invalid credentials');
     }
   };
