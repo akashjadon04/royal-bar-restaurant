@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Search, MapPin, Package, Clock } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { LottiePlayer } from '@/components/motion/LottiePlayer';
 
 export default function TrackOrderPage() {
   const [orderId, setOrderId] = useState('');
@@ -24,8 +25,8 @@ export default function TrackOrderPage() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
         >
-          <div className="w-20 h-20 bg-zomato-red/10 rounded-full flex items-center justify-center mx-auto mb-6">
-            <Package className="w-10 h-10 text-zomato-red" />
+          <div className="w-40 h-40 mx-auto mb-2">
+            <LottiePlayer src="/lottie/anim_8.json" className="w-full h-full opacity-90" />
           </div>
           <h1 className="text-4xl md:text-5xl font-display font-bold text-zomato-text mb-4">Track Your Order</h1>
           <p className="text-zomato-muted text-lg mb-10 font-light">

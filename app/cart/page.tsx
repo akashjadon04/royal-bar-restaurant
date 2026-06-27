@@ -8,17 +8,7 @@ import Image from 'next/image';
 import { useState, useEffect } from 'react';
 import Lottie from 'lottie-react';
 
-const LottieEmptyCart = () => {
-  const [data, setData] = useState(null);
-  useEffect(() => {
-    fetch('/lottie-cart.json')
-      .then(res => res.json())
-      .then(setData)
-      .catch(() => {});
-  }, []);
-  if (!data) return <ShoppingBag className="w-20 h-20 text-zomato-muted mb-6" />;
-  return <Lottie animationData={data} className="w-48 h-48" />;
-};
+import { LottiePlayer } from '@/components/motion/LottiePlayer';
 
 export default function CartPage() {
   const [isClient, setIsClient] = useState(false);
@@ -38,7 +28,7 @@ export default function CartPage() {
         
         {items.length === 0 ? (
           <div className="bg-white rounded-2xl p-12 text-center shadow-zomato-subtle border border-zomato-border flex flex-col items-center">
-            <LottieEmptyCart />
+            <LottiePlayer src="/lottie/anim_1.json" className="w-48 h-48" />
             <h2 className="text-2xl font-bold text-zomato-text mb-4 mt-6">Your cart is empty</h2>
             <p className="text-zomato-muted mb-8">Looks like you haven't added anything to your cart yet.</p>
             <Link 

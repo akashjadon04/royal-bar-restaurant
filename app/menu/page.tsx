@@ -5,6 +5,7 @@ import { motion } from 'framer-motion';
 import { MenuCard } from '@/components/motion/MenuCard';
 import CategoryBar from '@/components/ui/CategoryBar';
 import { Search, SlidersHorizontal } from 'lucide-react';
+import { LottiePlayer } from '@/components/motion/LottiePlayer';
 import { useSearchParams } from 'next/navigation';
 import { Suspense, useEffect } from 'react';
 
@@ -73,8 +74,11 @@ function MenuContent() {
         {/* Menu Grid */}
         {filteredItems.length === 0 ? (
           <div className="text-center py-20">
+            <div className="flex justify-center mb-6">
+              <LottiePlayer src="/lottie/anim_9.json" className="w-48 h-48 opacity-80" />
+            </div>
             <h2 className="text-2xl font-bold text-zomato-text mb-2">No dishes found</h2>
-            <p className="text-zomato-muted">Try adjusting your search terms.</p>
+            <p className="text-zomato-muted">Try adjusting your search terms or filters.</p>
           </div>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">

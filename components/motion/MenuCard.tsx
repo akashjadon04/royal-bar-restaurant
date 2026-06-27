@@ -52,7 +52,7 @@ export function MenuCard({ id, name, description, price, imageUrl, prepTimeMin, 
         </h3>
         <p className="text-sm text-zomato-muted mb-6 line-clamp-2 leading-relaxed">{description}</p>
         
-        <div className="mt-auto flex items-center justify-between">
+        <div className="mt-auto flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div className="flex flex-col">
             <span className="text-xs text-zomato-muted uppercase tracking-wider font-bold mb-0.5">Price</span>
             <span className="text-2xl font-display font-bold text-zomato-text">£{price.toFixed(2)}</span>
@@ -60,7 +60,7 @@ export function MenuCard({ id, name, description, price, imageUrl, prepTimeMin, 
           <button 
             onClick={handleAdd}
             disabled={added}
-            className={`${added ? 'bg-green-600 text-white shadow-green-600/30' : 'bg-zomato-red text-white shadow-zomato-red/30 hover:bg-zomato-red-dark hover:scale-105'} px-5 py-2.5 rounded-full shadow-lg transition-all flex items-center font-bold text-sm`}
+            className={`${added ? 'bg-green-600 text-white shadow-green-600/30' : 'bg-zomato-red text-white shadow-zomato-red/30 hover:bg-zomato-red-dark hover:scale-105'} w-full sm:w-auto px-5 py-2.5 rounded-full shadow-lg transition-all flex items-center justify-center font-bold text-sm shrink-0`}
           >
             {added ? (
               <>Added <Check className="w-4 h-4 ml-1.5" /></>

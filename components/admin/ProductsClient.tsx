@@ -1,11 +1,34 @@
 "use client"
 
-import { useState } from "react"
-import { Search, Plus, Trash2, Edit2, Star, CheckCircle, XCircle, MoreVertical } from "lucide-react"
+import { useState, useRef } from "react"
+import { Search, Plus, Trash2, Edit2, Star, CheckCircle, XCircle, MoreVertical, Upload } from "lucide-react"
+import { LottiePlayer } from '@/components/motion/LottiePlayer';
 
-export function ProductsClient({ initialProducts, addProductAction, deleteProductAction }: any) {
+export function ProductsClient({ initialProducts, addProductAction, deleteProductAction, editProductAction }: any) {
   const [isAdding, setIsAdding] = useState(false)
+  const [editingId, setEditingId] = useState<string | null>(null)
   const [isSaving, setIsSaving] = useState(false)
+  const [base64Image, setBase64Image] = useState<string | null>(null)
+  const fileInputRef = useRef<HTMLInputElement>(null)
+
+  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (file) {
+      const reader = new FileReader()
+      reader.onloadend = () => {
+        setBase64Image(reader.result as string)
+      }
+      reader.readAsDataURL(file)
+    }
+  }
+
+  const resetForm = () => {
+    setIsAdding(false)
+    setEditingId(null)
+    setBase64Image(null)
+  }
+
+  const activeProduct = editingId ? initialProducts.find((p: any) => p.id === editingId) : null
 
   return (
     <div className="space-y-6">
@@ -20,44 +43,78 @@ export function ProductsClient({ initialProducts, addProductAction, deleteProduc
               className="pl-10 pr-4 py-2 border border-gray-300 rounded-lg text-sm focus:ring-red-500 focus:border-red-500 w-full sm:w-64"
             />
           </div>
-          <button onClick={() => setIsAdding(true)} className="flex items-center px-4 py-2 bg-red-600 rounded-lg text-sm font-medium text-white hover:bg-red-700">
+          <button onClick={() => { resetForm(); setIsAdding(true) }} className="flex items-center px-4 py-2 bg-red-600 rounded-lg text-sm font-medium text-white hover:bg-red-700">
             <Plus className="w-4 h-4 mr-2" />
             Add Product
           </button>
         </div>
       </div>
 
-      {isAdding && (
+      {(isAdding || editingId) && (
         <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-200 mb-6 relative">
-           <button onClick={() => setIsAdding(false)} className="absolute top-4 right-4 text-gray-400 hover:text-gray-600">
+           <button onClick={resetForm} className="absolute top-4 right-4 text-gray-400 hover:text-gray-600">
              <XCircle className="w-6 h-6" />
            </button>
-           <h2 className="text-xl font-bold mb-4">Add New Product</h2>
+           <h2 className="text-xl font-bold mb-4">{editingId ? 'Edit Product' : 'Add New Product'}</h2>
            <form action={async (formData) => {
              setIsSaving(true)
-             await addProductAction(formData)
+             if (editingId) {
+               await editProductAction(editingId, formData)
+             } else {
+               await addProductAction(formData)
+             }
              setIsSaving(false)
-             setIsAdding(false)
+             resetForm()
            }} className="space-y-4">
              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                <div>
                  <label className="block text-sm font-medium text-gray-700 mb-1">Product Name</label>
-                 <input name="name" required type="text" className="w-full border-gray-300 rounded-md shadow-sm" />
+                 <input name="name" required type="text" defaultValue={activeProduct?.name} className="w-full border-gray-300 rounded-md shadow-sm" />
                </div>
                <div>
                  <label className="block text-sm font-medium text-gray-700 mb-1">Base Price (£)</label>
-                 <input name="basePrice" required type="number" step="0.01" className="w-full border-gray-300 rounded-md shadow-sm" />
+                 <input name="basePrice" required type="number" step="0.01" defaultValue={activeProduct?.basePrice} className="w-full border-gray-300 rounded-md shadow-sm" />
                </div>
                <div className="md:col-span-2">
                  <label className="block text-sm font-medium text-gray-700 mb-1">Description</label>
-                 <textarea name="description" required rows={3} className="w-full border-gray-300 rounded-md shadow-sm" />
+                 <textarea name="description" required rows={3} defaultValue={activeProduct?.description} className="w-full border-gray-300 rounded-md shadow-sm" />
                </div>
                <div className="md:col-span-2">
-                 <label className="block text-sm font-medium text-gray-700 mb-1">Image URL (Unsplash recommended)</label>
-                 <input name="imageUrl" required type="text" className="w-full border-gray-300 rounded-md shadow-sm" defaultValue="https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&q=80&w=800" />
+                 <label className="block text-sm font-medium text-gray-700 mb-1">Product Image</label>
+                 
+                 <div className="flex items-center gap-4">
+                   <div 
+                     onClick={() => fileInputRef.current?.click()} 
+                     className="w-24 h-24 border-2 border-dashed border-gray-300 rounded-lg flex flex-col items-center justify-center cursor-pointer hover:bg-gray-50 transition overflow-hidden relative"
+                   >
+                     {(base64Image || activeProduct?.imageUrl) ? (
+                       <img src={base64Image || activeProduct?.imageUrl} alt="Preview" className="w-full h-full object-cover" />
+                     ) : (
+                       <>
+                         <Upload className="w-6 h-6 text-gray-400 mb-1" />
+                         <span className="text-xs text-gray-500">Upload</span>
+                       </>
+                     )}
+                   </div>
+                   <div className="flex-1">
+                     <p className="text-xs text-gray-500 mb-2">Upload a PNG, JPG, or HEIC from your device.</p>
+                     <input 
+                       type="file" 
+                       accept="image/*" 
+                       ref={fileInputRef} 
+                       onChange={handleImageUpload} 
+                       className="hidden" 
+                     />
+                     <button type="button" onClick={() => fileInputRef.current?.click()} className="px-3 py-1.5 bg-gray-100 border border-gray-300 rounded text-sm font-medium hover:bg-gray-200 transition">
+                       Choose File
+                     </button>
+                   </div>
+                 </div>
+                 {/* Hidden input to pass the actual URL to the Server Action */}
+                 <input type="hidden" name="imageUrl" value={base64Image || activeProduct?.imageUrl || "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&q=80&w=800"} />
                </div>
                <div className="md:col-span-2 flex items-center space-x-2">
-                 <input name="isFeatured" type="checkbox" id="featuredCheck" className="rounded border-gray-300 text-red-600 focus:ring-red-500" />
+                 <input name="isFeatured" type="checkbox" defaultChecked={activeProduct?.isFeatured} id="featuredCheck" className="rounded border-gray-300 text-red-600 focus:ring-red-500" />
                  <label htmlFor="featuredCheck" className="text-sm font-medium text-gray-700">Feature this product on homepage?</label>
                </div>
              </div>
@@ -129,6 +186,9 @@ export function ProductsClient({ initialProducts, addProductAction, deleteProduc
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                     <div className="flex items-center justify-end space-x-3">
+                      <button onClick={() => { resetForm(); setEditingId(product.id) }} className="text-gray-400 hover:text-blue-600" title="Edit">
+                        <Edit2 className="w-4 h-4" />
+                      </button>
                       <form action={async () => { await deleteProductAction(product.id) }}>
                         <button type="submit" className="text-gray-400 hover:text-red-600" title="Delete">
                           <Trash2 className="w-4 h-4" />
@@ -140,8 +200,9 @@ export function ProductsClient({ initialProducts, addProductAction, deleteProduc
               ))}
               {initialProducts.length === 0 && (
                 <tr>
-                  <td colSpan={5} className="px-6 py-8 text-center text-gray-500 text-sm">
-                    No products found. Start by adding one!
+                  <td colSpan={5} className="px-6 py-12 text-center">
+                    <LottiePlayer src="/lottie/anim_7.json" className="w-32 h-32 mx-auto opacity-60 mb-2" />
+                    <p className="text-gray-500 text-sm font-medium">No products found. Start by adding one!</p>
                   </td>
                 </tr>
               )}

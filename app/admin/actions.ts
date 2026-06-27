@@ -42,6 +42,29 @@ export async function addProduct(data: FormData) {
   revalidatePath("/menu")
 }
 
+export async function editProduct(id: string, data: FormData) {
+  const name = data.get("name") as string
+  const description = data.get("description") as string
+  const basePrice = parseFloat(data.get("basePrice") as string)
+  const imageUrl = data.get("imageUrl") as string
+  const isFeatured = data.get("isFeatured") === "on"
+  
+  await prisma.menuItem.update({
+    where: { id },
+    data: {
+      name,
+      description,
+      basePrice,
+      imageUrl,
+      isFeatured
+    }
+  })
+  
+  revalidatePath("/admin")
+  revalidatePath("/")
+  revalidatePath("/menu")
+}
+
 export async function deleteProduct(id: string) {
   await prisma.menuItem.delete({
     where: { id }

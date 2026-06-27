@@ -1,6 +1,7 @@
 import prisma from "@/lib/prisma"
 import { updateOrderStatus } from "../actions"
 import { Search, Calendar, Printer, User, Clock, Check, Truck, ChefHat } from "lucide-react"
+import { LottiePlayer } from '@/components/motion/LottiePlayer';
 
 export default async function AdminOrders() {
   // Fetch all orders
@@ -40,9 +41,16 @@ export default async function AdminOrders() {
             </span>
           </div>
           <div className="space-y-4">
-            {orders.filter((o: any) => o.status === 'PENDING').map((order: any) => (
-              <OrderCard key={order.id} order={order} nextAction="COOKING" nextLabel="Accept & Cook" ActionIcon={ChefHat} iconColor="text-orange-600" btnColor="bg-orange-50 hover:bg-orange-100 border-orange-200" />
-            ))}
+            {orders.filter((o: any) => o.status === 'PENDING').length === 0 ? (
+              <div className="text-center py-6">
+                <LottiePlayer src="/lottie/anim_6.json" className="w-32 h-32 mx-auto opacity-70" />
+                <p className="text-sm text-gray-500 mt-2 font-medium">No pending orders</p>
+              </div>
+            ) : (
+              orders.filter((o: any) => o.status === 'PENDING').map((order: any) => (
+                <OrderCard key={order.id} order={order} nextAction="COOKING" nextLabel="Accept & Cook" ActionIcon={ChefHat} iconColor="text-orange-600" btnColor="bg-orange-50 hover:bg-orange-100 border-orange-200" />
+              ))
+            )}
           </div>
         </div>
 

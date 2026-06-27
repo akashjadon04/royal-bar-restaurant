@@ -1,66 +1,51 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import { motion } from 'framer-motion';
+import { useEffect } from 'react';
 import Link from 'next/link';
-import Lottie from 'lottie-react';
-import { ShieldAlert } from 'lucide-react';
+import { Home, RefreshCcw } from 'lucide-react';
+import { LottiePlayer } from '@/components/motion/LottiePlayer';
 
-export default function ErrorPage({
+export default function Error({
   error,
   reset,
 }: {
   error: Error & { digest?: string };
   reset: () => void;
 }) {
-  const [animationData, setAnimationData] = useState(null);
-
   useEffect(() => {
-    console.error('App Error Boundary caught:', error);
-    fetch('/animation.json')
-      .then((res) => res.json())
-      .then(setAnimationData)
-      .catch(() => {});
+    console.error(error);
   }, [error]);
 
   return (
-    <div className="min-h-[80vh] flex items-center justify-center bg-white px-4">
-      <motion.div 
-        initial={{ opacity: 0, scale: 0.95 }}
-        animate={{ opacity: 1, scale: 1 }}
-        className="max-w-md w-full text-center flex flex-col items-center"
-      >
-        <div className="w-64 h-64 mb-6 relative">
-          <div className="absolute inset-0 bg-red-50 rounded-full animate-pulse" />
-          {animationData ? (
-            <Lottie animationData={animationData} loop={true} className="relative z-10" />
-          ) : (
-            <div className="w-full h-full flex items-center justify-center relative z-10">
-              <ShieldAlert className="w-24 h-24 text-zomato-red" />
-            </div>
-          )}
+    <div className="min-h-[80vh] flex flex-col items-center justify-center bg-gray-50 px-4">
+      <div className="text-center max-w-md w-full">
+        <div className="w-64 h-64 mx-auto mb-8 relative">
+          <LottiePlayer src="/lottie/anim_4.json" className="w-full h-full drop-shadow-xl" />
         </div>
-        
-        <h1 className="text-3xl font-display font-bold text-zomato-text mb-4">Oops! Something spilled.</h1>
-        <p className="text-zomato-muted text-lg mb-8">
-          We encountered an unexpected error in the kitchen. Our chefs are cleaning it up!
+
+        <h1 className="text-4xl font-black text-gray-900 mb-4 tracking-tight">Something went wrong</h1>
+        <p className="text-gray-500 mb-8 leading-relaxed">
+          Looks like we spilled some curry on the server. Don't worry, we're cleaning it up!
         </p>
-        
-        <div className="flex gap-4">
+
+        <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
           <button 
             onClick={() => reset()}
-            className="bg-zomato-red text-white px-8 py-3 rounded-full font-bold hover:bg-black transition-colors"
+            className="w-full sm:w-auto px-6 py-3 border-2 border-gray-300 text-gray-700 font-bold rounded-full hover:bg-gray-50 hover:border-gray-400 transition flex items-center justify-center"
           >
+            <RefreshCcw className="w-5 h-5 mr-2" />
             Try Again
           </button>
+          
           <Link 
             href="/"
-            className="bg-zomato-bg text-zomato-text px-8 py-3 rounded-full font-bold hover:bg-gray-200 transition-colors"
+            className="w-full sm:w-auto bg-red-600 text-white px-8 py-3 rounded-full font-bold hover:bg-red-700 transition shadow-lg shadow-red-200 flex items-center justify-center"
           >
+            <Home className="w-5 h-5 mr-2" />
             Go Home
           </Link>
         </div>
-      </motion.div>
+      </div>
     </div>
   );
 }

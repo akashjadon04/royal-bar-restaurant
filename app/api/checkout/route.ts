@@ -85,6 +85,16 @@ export async function POST(req: Request) {
       },
     });
 
+    const isDemoMode = process.env.STRIPE_SECRET_KEY === 'sk_test_dummy_key_for_build' || !process.env.STRIPE_SECRET_KEY;
+
+    if (isDemoMode) {
+      // Demo Payment Flow: Redirect to a simulated checkout page
+      return NextResponse.json({ 
+        sessionId: 'demo_session_' + order.id, 
+        url: `${process.env.NEXT_PUBLIC_URL || 'http://localhost:3000'}/checkout-demo?orderId=${order.id}`
+      });
+    }
+
     const stripeSession = await stripe.checkout.sessions.create({
       payment_method_types: ['card'],
       mode: 'payment',
@@ -93,7 +103,7 @@ export async function POST(req: Request) {
         order_id: order.id,
         user_id: 'demo-user',
       },
-      success_url: `${process.env.NEXT_PUBLIC_URL}/order/confirmed?session_id={CHECKOUT_SESSION_ID}`,
+      success_url: `${process.env.NEXT_PUBLIC_URL}/order/confirmed?orderId=${order.id}`,
       cancel_url: `${process.env.NEXT_PUBLIC_URL}/cart?cancelled=1`,
       expires_at: Math.floor(Date.now() / 1000) + 1800,
     });

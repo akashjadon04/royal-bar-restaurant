@@ -6,6 +6,7 @@ import Link from "next/link"
 import Lottie from "lottie-react"
 import { User, MapPin, Gift, Clock, Download, RefreshCw, ShoppingBag, Settings, LogOut, ChevronRight } from "lucide-react"
 import { getUserOrders } from "../admin/actions"
+import { LottiePlayer } from '@/components/motion/LottiePlayer';
 
 export default function AccountPage() {
   const { data: session, status } = useSession()
@@ -95,21 +96,16 @@ export default function AccountPage() {
             </h2>
             
             {orders.length === 0 ? (
-              <div className="flex flex-col items-center justify-center py-12 text-center">
-                {/* Feature: Lottie Animation for Empty State */}
-                <div className="w-64 h-64 mb-6 relative">
-                  {animationData ? (
-                    <Lottie animationData={animationData} loop={true} className="w-full h-full" />
-                  ) : (
-                    <div className="absolute inset-0 bg-gray-100 rounded-full animate-pulse" />
-                  )}
+                <div className="text-center py-16 px-4 bg-white rounded-2xl border border-gray-100 shadow-sm">
+                  <div className="flex justify-center mb-4">
+                    <LottiePlayer src="/lottie/anim_2.json" className="w-40 h-40" />
+                  </div>
+                  <h3 className="text-xl font-bold text-gray-900 mb-2">No orders yet</h3>
+                  <p className="text-gray-500 mb-6 max-w-md mx-auto">Looks like you haven't placed any orders yet. Discover our authentic Amritsari dishes and start ordering!</p>
+                  <Link href="/menu" className="inline-block bg-zomato-red text-white px-8 py-3 rounded-full font-bold shadow-lg shadow-red-500/30 hover:bg-red-700 transition">
+                    Explore Menu
+                  </Link>
                 </div>
-                <h3 className="text-2xl font-bold text-gray-900 mb-2">No orders yet!</h3>
-                <p className="text-gray-500 mb-8 max-w-md">Looks like you haven't tasted our royal menu yet. Your stomach is rumbling, let's fix that.</p>
-                <Link href="/menu" className="bg-red-600 text-white px-8 py-3 rounded-full font-bold hover:bg-red-700 transition shadow-lg shadow-red-200">
-                  Browse Menu
-                </Link>
-              </div>
             ) : (
               <div className="space-y-4">
                 {orders.map((order) => (

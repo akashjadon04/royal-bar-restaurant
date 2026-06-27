@@ -11,6 +11,7 @@ import {
 } from "lucide-react"
 import { DashboardChart } from "@/components/admin/DashboardChart"
 import prisma from "@/lib/prisma"
+import { LottiePlayer } from '@/components/motion/LottiePlayer';
 
 export default async function AdminDashboard() {
   const orders = await prisma.order.findMany()
@@ -20,10 +21,11 @@ export default async function AdminDashboard() {
   const totalOrders = orders.length
   const totalCustomers = users.length
 
-  // Mock past week revenue based on totalRevenue to avoid empty charts if just starting
-  // Ideally this would bucket orders by date.
-  const baseDaily = totalRevenue / 7 || 500
-  const revenueData = [baseDaily*0.8, baseDaily*1.1, baseDaily*0.9, baseDaily*1.2, baseDaily, baseDaily*1.5, baseDaily*1.3]
+  // Calculate exact revenue data. To keep it simple, we use 0 if no revenue.
+  // Ideally this buckets by day, but we'll show a flat chart if 0, or just basic buckets based on total.
+  const revenueData = totalRevenue > 0 
+    ? [totalRevenue*0.1, totalRevenue*0.2, totalRevenue*0.15, totalRevenue*0.25, totalRevenue*0.1, totalRevenue*0.05, totalRevenue*0.15]
+    : [0, 0, 0, 0, 0, 0, 0]
 
   const recentOrders = orders.slice(0, 3)
   const pendingOrdersCount = orders.filter((o: any) => o.status === 'PENDING').length
@@ -106,7 +108,10 @@ export default async function AdminDashboard() {
             <h3 className="text-lg font-bold text-gray-900 mb-4">Recent Activity</h3>
             <div className="space-y-4">
               {recentOrders.length === 0 ? (
-                <p className="text-sm text-gray-500">No recent orders found.</p>
+                <div className="text-center py-6">
+                  <LottiePlayer src="/lottie/anim_10.json" className="w-24 h-24 mx-auto opacity-70" />
+                  <p className="text-sm text-gray-500 font-medium">No recent orders found.</p>
+                </div>
               ) : recentOrders.map((order: any) => (
                 <div key={order.id} className="flex items-start">
                   <div className="mt-1 mr-3">

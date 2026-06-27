@@ -15,12 +15,13 @@ export default function SignIn() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const res = await signIn('credentials', {
-      redirect: true,
-      callbackUrl: '/',
+      redirect: false,
       email,
       password,
     });
-    if (res?.error) {
+    if (res?.ok) {
+      window.location.href = '/'; // Hard redirect ensures Navbar session refreshes
+    } else {
       alert('Invalid credentials');
     }
   };
