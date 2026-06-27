@@ -1,130 +1,146 @@
-'use client';
+import prisma from "@/lib/prisma"
+import { updateOrderStatus } from "../actions"
+import { Search, Calendar, Printer, User, Clock, Check, Truck, ChefHat } from "lucide-react"
 
-import { useState } from 'react';
-import { motion } from 'framer-motion';
-import { Search, ShoppingBag, Eye, Truck, CheckCircle } from 'lucide-react';
-import { formatPrice } from '@/lib/utils';
-
-interface Order {
-  id: string;
-  customer: string;
-  items: number;
-  total: number;
-  status: 'PENDING' | 'CONFIRMED' | 'PREPARING' | 'READY' | 'DELIVERED';
-  date: string;
-}
-
-const orders: Order[] = [
-  { id: 'ORD-001', customer: 'John Smith', items: 3, total: 89.97, status: 'DELIVERED', date: '2024-06-25' },
-  { id: 'ORD-002', customer: 'Emma Johnson', items: 2, total: 51.49, status: 'READY', date: '2024-06-25' },
-  { id: 'ORD-003', customer: 'Michael Brown', items: 5, total: 142.50, status: 'PREPARING', date: '2024-06-25' },
-  { id: 'ORD-004', customer: 'Sarah Davis', items: 1, total: 24.99, status: 'CONFIRMED', date: '2024-06-24' },
-  { id: 'ORD-005', customer: 'James Wilson', items: 4, total: 112.00, status: 'PENDING', date: '2024-06-24' },
-  { id: 'ORD-006', customer: 'Lisa Anderson', items: 2, total: 45.98, status: 'DELIVERED', date: '2024-06-23' },
-  { id: 'ORD-007', customer: 'David Martinez', items: 6, total: 178.50, status: 'PREPARING', date: '2024-06-23' },
-];
-
-const statusColors: Record<string, string> = {
-  PENDING: 'bg-yellow-500/20 text-yellow-400',
-  CONFIRMED: 'bg-blue-500/20 text-blue-400',
-  PREPARING: 'bg-orange-500/20 text-orange-400',
-  READY: 'bg-purple-500/20 text-purple-400',
-  DELIVERED: 'bg-green-500/20 text-green-400',
-};
-
-export default function OrdersManagement() {
-  const [searchQuery, setSearchQuery] = useState('');
-
-  const filteredOrders = orders.filter((order) =>
-    order.customer.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    order.id.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+export default async function AdminOrders() {
+  // Fetch all orders
+  const orders = await prisma.order.findMany()
 
   return (
-    <div className="min-h-screen bg-royal-900 pt-32 pb-24">
-      <div className="royal-container">
-        <motion.div
-          initial={{ y: 40, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ duration: 0.8 }}
-          className="mb-8"
-        >
-          <h1 className="font-display text-4xl text-royal-cream mb-2">
-            Orders <span className="text-royal-gold">Management</span>
-          </h1>
-          <p className="text-royal-cream/60">View and manage customer orders</p>
-        </motion.div>
-
-        <div className="grid grid-cols-1 sm t-2 sm:grid-cols-4 gap-4 mb-8">
-          {[
-            { label: 'Total Orders', value: '1,284', icon: ShoppingBag },
-            { label: 'Pending', value: '12', icon: Truck },
-            { label: 'Preparing', value: '8', icon: CheckCircle },
-            { label: 'Delivered Today', value: '45', icon: CheckCircle },
-          ].map((stat) => {
-            const Icon = stat.icon;
-            return (
-              <div key={stat.label} className="bg-royal-800 border border-royal-600 p-6 rounded-sharp-sm">
-                <Icon className="w-6 h-6 text-royal-gold mb-2" />
-                <p className="font-display text-2xl text-royal-cream">{stat.value}</p>
-                <p className="text-royal-cream/60 text-sm">{stat.label}</p>
-              </div>
-            );
-          })}
-        </div>
-
-        <div className="flex flex-col sm:flex-row gap-4 mb-8">
-          <div className="relative flex-1">
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-royal-cream/40" />
-            <input
-              type="text"
-              placeholder="Search orders..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="royal-input pl-12"
+    <div className="space-y-6">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <h1 className="text-2xl font-bold text-gray-900">Order Management</h1>
+        <div className="flex space-x-3">
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+            <input 
+              type="text" 
+              placeholder="Search Order ID..." 
+              className="pl-10 pr-4 py-2 border border-gray-300 rounded-lg text-sm focus:ring-red-500 focus:border-red-500 w-full sm:w-64"
             />
+          </div>
+          <button className="flex items-center px-4 py-2 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 bg-white hover:bg-gray-50">
+            <Calendar className="w-4 h-4 mr-2 text-gray-500" />
+            Today
+          </button>
+        </div>
+      </div>
+
+      {/* Kanban Board Container */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 overflow-x-auto pb-4">
+        
+        {/* Column 1: Pending */}
+        <div className="bg-gray-50 rounded-xl p-4 border border-gray-200 min-w-[300px]">
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="font-bold text-gray-700 flex items-center">
+              <span className="w-2 h-2 rounded-full bg-yellow-400 mr-2" /> Pending
+            </h3>
+            <span className="bg-white text-xs font-bold px-2 py-1 rounded shadow-sm text-gray-500">
+              {orders.filter((o: any) => o.status === 'PENDING').length}
+            </span>
+          </div>
+          <div className="space-y-4">
+            {orders.filter((o: any) => o.status === 'PENDING').map((order: any) => (
+              <OrderCard key={order.id} order={order} nextAction="COOKING" nextLabel="Accept & Cook" ActionIcon={ChefHat} iconColor="text-orange-600" btnColor="bg-orange-50 hover:bg-orange-100 border-orange-200" />
+            ))}
           </div>
         </div>
 
-        <div className="bg-royal-800 border border-royal-600 rounded-sharp-sm overflow-hidden">
-          <table className="w-full">
-            <thead>
-              <tr className="border-b border-royal-600">
-                <th className="text-left p-4 text-royal-gold font-body text-sm uppercase">Order ID</th>
-                <th className="text-left p-4 text-royal-gold font-body text-sm uppercase">Customer</th>
-                <th className="text-left p-4 text-royal-gold font-body text-sm uppercase">Items</th>
-                <th className="text-left p-4 text-royal-gold font-body text-sm uppercase">Total</th>
-                <th className="text-left p-4 text-royal-gold font-body text-sm uppercase">Status</th>
-                <th className="text-left p-4 text-royal-gold font-body text-sm uppercase">Date</th>
-                <th className="text-right p-4 text-royal-gold font-body text-sm uppercase">Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {filteredOrders.map((order) => (
-                <tr key={order.id} className="border-b border-royal-600/50 hover:bg-royal-700/50 transition-colors">
-                  <td className="p-4 font-medium text-royal-cream">{order.id}</td>
-                  <td className="p-4 text-royal-cream/80">{order.customer}</td>
-                  <td className="p-4 text-royal-cream/80">{order.items}</td>
-                  <td className="p-4 text-royal-gold font-semibold">{formatPrice(order.total)}</td>
-                  <td className="p-4">
-                    <span className={`px-3 py-1 rounded-full text-xs font-medium ${statusColors[order.status]}`}>
-                      {order.status}
-                    </span>
-                  </td>
-                  <td className="p-4 text-royal-cream/60">{order.date}</td>
-                  <td className="p-4">
-                    <div className="flex items-center justify-end gap-2">
-                      <button className="p-2 text-royal-cream/60彻底60 hover:text-royal-gold transition-colors">
-                        <Eye className="w-4 h-4" />
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+        {/* Column 2: Cooking */}
+        <div className="bg-gray-50 rounded-xl p-4 border border-gray-200 min-w-[300px]">
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="font-bold text-gray-700 flex items-center">
+              <span className="w-2 h-2 rounded-full bg-orange-400 mr-2" /> Cooking
+            </h3>
+            <span className="bg-white text-xs font-bold px-2 py-1 rounded shadow-sm text-gray-500">
+               {orders.filter((o: any) => o.status === 'COOKING').length}
+            </span>
+          </div>
+          <div className="space-y-4">
+            {orders.filter((o: any) => o.status === 'COOKING').map((order: any) => (
+              <OrderCard key={order.id} order={order} nextAction="OUT_FOR_DELIVERY" nextLabel="Send out" ActionIcon={Truck} iconColor="text-blue-600" btnColor="bg-blue-50 hover:bg-blue-100 border-blue-200" />
+            ))}
+          </div>
         </div>
+
+        {/* Column 3: Out for Delivery */}
+        <div className="bg-gray-50 rounded-xl p-4 border border-gray-200 min-w-[300px]">
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="font-bold text-gray-700 flex items-center">
+              <span className="w-2 h-2 rounded-full bg-blue-400 mr-2" /> Delivery
+            </h3>
+            <span className="bg-white text-xs font-bold px-2 py-1 rounded shadow-sm text-gray-500">
+               {orders.filter((o: any) => o.status === 'OUT_FOR_DELIVERY').length}
+            </span>
+          </div>
+          <div className="space-y-4">
+            {orders.filter((o: any) => o.status === 'OUT_FOR_DELIVERY').map((order: any) => (
+              <OrderCard key={order.id} order={order} nextAction="DELIVERED" nextLabel="Mark Delivered" ActionIcon={Check} iconColor="text-green-600" btnColor="bg-green-50 hover:bg-green-100 border-green-200" />
+            ))}
+          </div>
+        </div>
+
+        {/* Column 4: Delivered */}
+        <div className="bg-gray-50 rounded-xl p-4 border border-gray-200 min-w-[300px]">
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="font-bold text-gray-700 flex items-center">
+              <span className="w-2 h-2 rounded-full bg-green-400 mr-2" /> Completed
+            </h3>
+            <span className="bg-white text-xs font-bold px-2 py-1 rounded shadow-sm text-gray-500">
+               {orders.filter((o: any) => o.status === 'DELIVERED').length}
+            </span>
+          </div>
+          <div className="space-y-4 opacity-70">
+            {orders.filter((o: any) => o.status === 'DELIVERED').map((order: any) => (
+              <OrderCard key={order.id} order={order} nextAction="" nextLabel="" ActionIcon={Check} iconColor="text-gray-400" btnColor="hidden" />
+            ))}
+          </div>
+        </div>
+
       </div>
     </div>
-  );
+  )
+}
+
+function OrderCard({ order, nextAction, nextLabel, ActionIcon, iconColor, btnColor }: any) {
+  return (
+    <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
+      <div className="flex justify-between items-start mb-3">
+        <div>
+          <span className="text-xs font-bold text-gray-400 uppercase tracking-wider block mb-1">
+            {new Date(order.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+          </span>
+          <span className="font-mono text-sm font-bold text-gray-900">
+            #{order.id.split('_').pop()?.toUpperCase()}
+          </span>
+        </div>
+        <div className="flex space-x-1">
+          <button title="Print Receipt" className="p-1.5 text-gray-400 hover:text-gray-700 hover:bg-gray-100 rounded">
+            <Printer className="w-4 h-4" />
+          </button>
+        </div>
+      </div>
+      
+      <div className="mb-4">
+        <p className="text-sm text-gray-600 flex items-center mb-1">
+          <User className="w-3 h-3 mr-1.5" /> Customer ID: {order.userId.substring(0,8)}
+        </p>
+        <div className="text-sm font-medium text-gray-900 mt-2 p-2 bg-gray-50 rounded border border-gray-100">
+          Total: £{order.total.toFixed(2)}
+        </div>
+      </div>
+
+      {nextAction && (
+        <form action={async () => {
+          "use server";
+          await updateOrderStatus(order.id, nextAction);
+        }}>
+          <button className={`w-full flex items-center justify-center px-4 py-2 border rounded-md text-sm font-medium transition ${btnColor}`}>
+            <ActionIcon className={`w-4 h-4 mr-2 ${iconColor}`} />
+            <span className={iconColor}>{nextLabel}</span>
+          </button>
+        </form>
+      )}
+    </div>
+  )
 }

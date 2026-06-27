@@ -1,149 +1,185 @@
-import prisma from "@/lib/prisma"
-import { updateOrderStatus, addProduct, deleteProduct } from "./actions"
+"use client";
 
-export default async function AdminPage() {
-  const orders = await prisma.order.findMany({
-    orderBy: { createdAt: 'desc' },
-    include: {
-      items: {
-        include: { menuItem: true }
+import { useEffect, useState } from "react"
+import { 
+  TrendingUp, 
+  ShoppingBag, 
+  Users, 
+  DollarSign, 
+  ArrowUpRight, 
+  ArrowDownRight,
+  Clock,
+  CheckCircle,
+  AlertCircle
+} from "lucide-react"
+import { Line } from 'react-chartjs-2'
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend,
+  Filler
+} from 'chart.js'
+
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend,
+  Filler
+)
+
+export default function AdminDashboard() {
+  const [stats, setStats] = useState({
+    revenue: 12450.50,
+    orders: 142,
+    customers: 89,
+    growth: 12.5
+  });
+
+  const chartData = {
+    labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+    datasets: [
+      {
+        fill: true,
+        label: 'Revenue (£)',
+        data: [1200, 1900, 1500, 2200, 2800, 3500, 2900],
+        borderColor: 'rgb(220, 38, 38)',
+        backgroundColor: 'rgba(220, 38, 38, 0.1)',
+        tension: 0.4
       }
-    }
-  })
+    ]
+  };
 
-  const products = await prisma.menuItem.findMany({
-    orderBy: { name: 'asc' }
-  })
+  const chartOptions = {
+    responsive: true,
+    plugins: {
+      legend: { display: false },
+      title: { display: false }
+    },
+    scales: {
+      y: { beginAtZero: true }
+    }
+  };
 
   return (
-    <div className="space-y-12">
-      {/* Orders Section */}
-      <section>
-        <h2 className="text-2xl font-bold mb-6">Live Orders</h2>
-        <div className="bg-white shadow rounded-lg overflow-hidden">
-          <table className="min-w-full divide-y divide-gray-200">
-            <thead className="bg-gray-50">
-              <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Order ID</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Items</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Total</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Actions</th>
-              </tr>
-            </thead>
-            <tbody className="bg-white divide-y divide-gray-200">
-              {orders.map((order: any) => (
-                <tr key={order.id}>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{order.id.slice(-6).toUpperCase()}</td>
-                  <td className="px-6 py-4 text-sm text-gray-500">
-                    {order.items.map((item: any) => (
-                      <div key={item.id}>{item.quantity}x {item.menuItem.name}</div>
-                    ))}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">£{order.total.toFixed(2)}</td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
-                      ${order.status === 'PENDING' ? 'bg-yellow-100 text-yellow-800' : 
-                        order.status === 'COOKING' ? 'bg-orange-100 text-orange-800' :
-                        order.status === 'OUT_FOR_DELIVERY' ? 'bg-blue-100 text-blue-800' :
-                        'bg-green-100 text-green-800'}`}>
-                      {order.status}
-                    </span>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-2">
-                    <form action={async () => {
-                      "use server";
-                      await updateOrderStatus(order.id, 'COOKING');
-                    }} className="inline">
-                      <button className="text-orange-600 hover:text-orange-900 bg-orange-100 px-3 py-1 rounded">Accept & Cook</button>
-                    </form>
-                    <form action={async () => {
-                      "use server";
-                      await updateOrderStatus(order.id, 'OUT_FOR_DELIVERY');
-                    }} className="inline">
-                      <button className="text-blue-600 hover:text-blue-900 bg-blue-100 px-3 py-1 rounded">Out for Delivery</button>
-                    </form>
-                    <form action={async () => {
-                      "use server";
-                      await updateOrderStatus(order.id, 'DELIVERED');
-                    }} className="inline">
-                      <button className="text-green-600 hover:text-green-900 bg-green-100 px-3 py-1 rounded">Delivered</button>
-                    </form>
-                  </td>
-                </tr>
-              ))}
-              {orders.length === 0 && (
-                <tr>
-                  <td colSpan={5} className="px-6 py-4 text-center text-sm text-gray-500">No orders yet</td>
-                </tr>
-              )}
-            </tbody>
-          </table>
+    <div className="space-y-6">
+      <div className="flex justify-between items-center">
+        <h1 className="text-2xl font-bold text-gray-900">Dashboard Overview</h1>
+        <div className="flex space-x-3">
+          <button className="bg-white border border-gray-300 text-gray-700 px-4 py-2 rounded-lg text-sm font-medium hover:bg-gray-50 transition">
+            Export Report
+          </button>
+          <button className="bg-red-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-red-700 transition">
+            Add Product
+          </button>
         </div>
-      </section>
+      </div>
 
-      {/* Products Section */}
-      <section>
-        <div className="flex justify-between items-center mb-6">
-          <h2 className="text-2xl font-bold">Manage Products</h2>
-        </div>
-        
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          {/* Add Product Form */}
-          <div className="bg-white p-6 rounded-lg shadow">
-            <h3 className="text-lg font-medium mb-4">Add New Product</h3>
-            <form action={addProduct} className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700">Name</label>
-                <input required name="name" type="text" className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-red-500 focus:ring-red-500 sm:text-sm p-2 border" />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700">Description</label>
-                <textarea required name="description" rows={3} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-red-500 focus:ring-red-500 sm:text-sm p-2 border" />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700">Base Price (£)</label>
-                <input required name="basePrice" type="number" step="0.01" className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-red-500 focus:ring-red-500 sm:text-sm p-2 border" />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700">Image URL (Unsplash)</label>
-                <input required name="imageUrl" type="url" className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-red-500 focus:ring-red-500 sm:text-sm p-2 border" />
-              </div>
-              <div className="flex items-center">
-                <input name="isFeatured" type="checkbox" className="h-4 w-4 text-red-600 focus:ring-red-500 border-gray-300 rounded" />
-                <label className="ml-2 block text-sm text-gray-900">Featured Product (Shows on Homepage)</label>
-              </div>
-              <button type="submit" className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
-                Add Product
-              </button>
-            </form>
+      {/* KPI Cards (Feature 1, 2, 3) */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100 flex items-center justify-between group hover:shadow-md transition">
+          <div>
+            <p className="text-sm font-medium text-gray-500 mb-1">Total Revenue</p>
+            <h3 className="text-3xl font-bold text-gray-900">£{stats.revenue.toLocaleString()}</h3>
+            <p className="text-sm text-green-600 flex items-center mt-2 font-medium">
+              <ArrowUpRight className="w-4 h-4 mr-1" />
+              +12.5% from last week
+            </p>
           </div>
+          <div className="bg-red-50 p-4 rounded-lg group-hover:bg-red-100 transition">
+            <DollarSign className="w-8 h-8 text-red-600" />
+          </div>
+        </div>
 
-          {/* Product List */}
-          <div className="bg-white p-6 rounded-lg shadow overflow-hidden h-[600px] overflow-y-auto">
-            <h3 className="text-lg font-medium mb-4">Current Products</h3>
-            <ul className="divide-y divide-gray-200">
-              {products.map((product: any) => (
-                <li key={product.id} className="py-4 flex justify-between items-center">
-                  <div className="flex items-center">
-                    <img src={product.imageUrl || ''} alt="" className="h-10 w-10 rounded-full object-cover" />
-                    <div className="ml-3">
-                      <p className="text-sm font-medium text-gray-900">{product.name}</p>
-                      <p className="text-sm text-gray-500">£{product.basePrice.toFixed(2)}</p>
-                    </div>
+        <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100 flex items-center justify-between group hover:shadow-md transition">
+          <div>
+            <p className="text-sm font-medium text-gray-500 mb-1">Total Orders</p>
+            <h3 className="text-3xl font-bold text-gray-900">{stats.orders}</h3>
+            <p className="text-sm text-green-600 flex items-center mt-2 font-medium">
+              <ArrowUpRight className="w-4 h-4 mr-1" />
+              +8.2% from last week
+            </p>
+          </div>
+          <div className="bg-orange-50 p-4 rounded-lg group-hover:bg-orange-100 transition">
+            <ShoppingBag className="w-8 h-8 text-orange-600" />
+          </div>
+        </div>
+
+        <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100 flex items-center justify-between group hover:shadow-md transition">
+          <div>
+            <p className="text-sm font-medium text-gray-500 mb-1">New Customers</p>
+            <h3 className="text-3xl font-bold text-gray-900">{stats.customers}</h3>
+            <p className="text-sm text-red-600 flex items-center mt-2 font-medium">
+              <ArrowDownRight className="w-4 h-4 mr-1" />
+              -2.4% from last week
+            </p>
+          </div>
+          <div className="bg-blue-50 p-4 rounded-lg group-hover:bg-blue-100 transition">
+            <Users className="w-8 h-8 text-blue-600" />
+          </div>
+        </div>
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {/* Chart (Feature 4) */}
+        <div className="lg:col-span-2 bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+          <div className="flex justify-between items-center mb-6">
+            <h3 className="text-lg font-bold text-gray-900">Revenue Analytics</h3>
+            <select className="bg-gray-50 border border-gray-200 text-sm rounded-lg px-3 py-1.5 focus:ring-red-500 focus:border-red-500">
+              <option>Last 7 days</option>
+              <option>Last 30 days</option>
+              <option>This Year</option>
+            </select>
+          </div>
+          <div className="h-72 w-full">
+            <Line data={chartData} options={chartOptions} />
+          </div>
+        </div>
+
+        {/* Recent Activity (Feature 5) & Low Stock Alert (Feature 6) */}
+        <div className="space-y-6">
+          <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+            <h3 className="text-lg font-bold text-gray-900 mb-4">Recent Activity</h3>
+            <div className="space-y-4">
+              {[
+                { text: "Order #5892 placed by John D.", time: "2 mins ago", icon: <ShoppingBag className="w-4 h-4 text-orange-500" /> },
+                { text: "Order #5891 marked as Delivered", time: "15 mins ago", icon: <CheckCircle className="w-4 h-4 text-green-500" /> },
+                { text: "New customer registered", time: "1 hr ago", icon: <Users className="w-4 h-4 text-blue-500" /> },
+              ].map((activity, i) => (
+                <div key={i} className="flex items-start">
+                  <div className="mt-1 mr-3">{activity.icon}</div>
+                  <div>
+                    <p className="text-sm font-medium text-gray-900">{activity.text}</p>
+                    <p className="text-xs text-gray-500">{activity.time}</p>
                   </div>
-                  <form action={async () => {
-                    "use server"
-                    await deleteProduct(product.id)
-                  }}>
-                    <button type="submit" className="text-red-600 hover:text-red-900 text-sm font-medium">Remove</button>
-                  </form>
-                </li>
+                </div>
               ))}
-            </ul>
+            </div>
+            <button className="mt-6 w-full text-sm text-red-600 font-medium hover:text-red-700">View All Activity &rarr;</button>
+          </div>
+
+          <div className="bg-red-50 border border-red-100 p-6 rounded-xl">
+            <div className="flex items-center mb-2">
+              <AlertCircle className="w-5 h-5 text-red-600 mr-2" />
+              <h3 className="text-md font-bold text-red-900">Action Required</h3>
+            </div>
+            <p className="text-sm text-red-800 mb-4">
+              You have 5 orders pending acceptance for more than 10 minutes.
+            </p>
+            <button className="bg-red-600 text-white text-sm font-medium px-4 py-2 rounded-lg hover:bg-red-700 w-full transition">
+              Review Pending Orders
+            </button>
           </div>
         </div>
-      </section>
+      </div>
     </div>
   )
 }

@@ -27,15 +27,19 @@ const prismaMock = {
     count: async () => db.users.findMany().length
   },
   menuItem: {
-    findMany: async () => [],
-    findFirst: async () => null,
-    create: async () => ({}),
-    count: async () => 0,
-    update: async () => ({}),
-    delete: async () => ({})
+    findMany: async () => db.menuItems.findMany(),
+    findUnique: async (args: any) => db.menuItems.findById(args?.where?.id),
+    findFirst: async (args: any) => db.menuItems.findById(args?.where?.id) || db.menuItems.findMany()[0],
+    create: async (args: any) => db.menuItems.create(args.data),
+    count: async () => db.menuItems.findMany().length,
+    update: async (args: any) => db.menuItems.update(args?.where?.id, args.data),
+    delete: async (args: any) => db.menuItems.delete(args?.where?.id)
   },
   orderItem: {
     findMany: async () => []
+  },
+  category: {
+    findFirst: async () => ({ id: 'cat_1', name: 'Default' })
   },
   $transaction: async (queries: any) => {
     return Promise.all(queries);

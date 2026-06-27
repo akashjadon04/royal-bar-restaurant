@@ -17,7 +17,7 @@ export default function ErrorPage({
 
   useEffect(() => {
     console.error('App Error Boundary caught:', error);
-    fetch('/lottie-chef.json')
+    fetch('/animation.json')
       .then((res) => res.json())
       .then(setAnimationData)
       .catch(() => {});

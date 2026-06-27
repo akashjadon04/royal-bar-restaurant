@@ -1,33 +1,30 @@
-'use client';
+"use client"
 
-import { useState, useEffect } from 'react';
-import Lottie from 'lottie-react';
-import { motion } from 'framer-motion';
+import { useEffect, useState } from "react"
+import Lottie from "lottie-react"
 
 export default function Loading() {
-  const [animationData, setAnimationData] = useState<any>(null);
+  const [animationData, setAnimationData] = useState<any>(null)
 
   useEffect(() => {
-    fetch('/lottie-chef.json')
-      .then((res) => res.json())
-      .then(setAnimationData)
-      .catch(() => {});
-  }, []);
+    // We use the cart animation for a fun loading screen
+    fetch('/lottie-cart.json')
+      .then(res => res.json())
+      .then(data => setAnimationData(data))
+      .catch(console.error)
+  }, [])
 
   return (
-    <div className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-white/80 backdrop-blur-sm">
-      <motion.div
-        initial={{ opacity: 0, scale: 0.8 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{ duration: 0.5 }}
-        className="w-32 h-32 md:w-48 md:h-48 flex flex-col items-center justify-center"
-      >
+    <div className="min-h-[80vh] flex flex-col items-center justify-center bg-gray-50 px-4">
+      <div className="w-48 h-48 mx-auto relative mb-6">
         {animationData ? (
-          <Lottie animationData={animationData} loop={true} />
+          <Lottie animationData={animationData} loop={true} className="w-full h-full" />
         ) : (
-          <div className="w-12 h-12 border-4 border-zomato-red border-t-transparent rounded-full animate-spin"></div>
+          <div className="absolute inset-0 border-4 border-red-200 border-t-red-600 rounded-full animate-spin" />
         )}
-      </motion.div>
+      </div>
+      <h2 className="text-2xl font-bold text-gray-900 mb-2">Cooking up something good...</h2>
+      <p className="text-gray-500">Please wait while we prepare this page.</p>
     </div>
-  );
+  )
 }

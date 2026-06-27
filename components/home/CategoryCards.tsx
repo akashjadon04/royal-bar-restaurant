@@ -31,20 +31,20 @@ const categories = [
 
 export default function CategoryCards() {
   return (
-    <section id="categories" className="py-16 bg-white overflow-hidden">
-      <div className="royal-container">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+    <section id="categories" className="py-12 md:py-16 bg-white overflow-hidden">
+      <div className="royal-container px-4 sm:px-6">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
           {categories.map((category) => (
             <Atropos
               key={category.id}
-              className="w-full h-[320px] rounded-2xl cursor-pointer"
-              activeOffset={60}
-              shadowScale={1.1}
+              className="w-full h-[240px] md:h-[320px] rounded-2xl cursor-pointer"
+              activeOffset={40}
+              shadowScale={1.05}
               highlight={true}
             >
               <Link href={category.href} className="block w-full h-full relative rounded-2xl overflow-hidden group border border-white/20">
                 {/* Background Layer (Moves backward) */}
-                <div className="absolute inset-0 z-0" data-atropos-offset="-8">
+                <div className="absolute inset-0 z-0" data-atropos-offset="-5">
                   <Image
                     src={category.image}
                     alt={category.title}
