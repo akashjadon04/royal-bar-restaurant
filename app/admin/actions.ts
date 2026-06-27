@@ -50,3 +50,35 @@ export async function deleteProduct(id: string) {
   revalidatePath("/")
   revalidatePath("/menu")
 }
+
+export async function updateSettings(data: FormData) {
+  // We can write to the custom DB directly here since prisma isn't aware of settings in the mock
+  const { db } = await import("@/lib/db")
+  
+  const slide1 = data.get("slide1") as string
+  const slide2 = data.get("slide2") as string
+  const slide3 = data.get("slide3") as string
+  
+  db.settings.update({
+    restaurantOpen: data.get("restaurantOpen") === "on",
+    deliveryRadiusMiles: parseFloat(data.get("deliveryRadiusMiles") as string),
+    taxRate: parseFloat(data.get("taxRate") as string),
+    contactEmail: data.get("contactEmail") as string,
+    contactPhone: data.get("contactPhone") as string,
+    globalNotice: data.get("globalNotice") as string,
+    slideshowImages: [slide1, slide2, slide3].filter(Boolean)
+  })
+  
+  revalidatePath("/")
+  revalidatePath("/admin")
+  revalidatePath("/admin/settings")
+}
+
+export async function getUserOrders(email: string) {
+  const user = await prisma.user.findUnique({ where: { email } })
+  if (!user) return []
+  return prisma.order.findMany({
+    where: { userId: user.id },
+    orderBy: { createdAt: 'desc' }
+  })
+}

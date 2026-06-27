@@ -1,20 +1,9 @@
-"use client"
-
-import { useState } from "react"
 import { Save, Image as ImageIcon, MapPin, Store, Mail, Phone, Percent, MessageSquare } from "lucide-react"
+import { db } from "@/lib/db"
+import { updateSettings } from "../actions"
 
-export default function AdminSettings() {
-  const [isSaving, setIsSaving] = useState(false)
-
-  const handleSave = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setIsSaving(true)
-    // Mock save delay
-    setTimeout(() => {
-      setIsSaving(false)
-      alert("Settings saved successfully!")
-    }, 800)
-  }
+export default async function AdminSettings() {
+  const settings = db.settings.get()
 
   return (
     <div className="space-y-6 max-w-4xl">
@@ -22,7 +11,7 @@ export default function AdminSettings() {
         <h1 className="text-2xl font-bold text-gray-900">Store Settings</h1>
       </div>
 
-      <form onSubmit={handleSave} className="space-y-8">
+      <form action={updateSettings} className="space-y-8">
         
         {/* Section 1: Store Status */}
         <section className="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
@@ -36,7 +25,7 @@ export default function AdminSettings() {
               <p className="text-sm text-gray-500">Toggle this off to prevent any new orders.</p>
             </div>
             <label className="relative inline-flex items-center cursor-pointer">
-              <input type="checkbox" className="sr-only peer" defaultChecked />
+              <input type="checkbox" name="restaurantOpen" className="sr-only peer" defaultChecked={settings.restaurantOpen} />
               <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-red-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-red-600"></div>
             </label>
           </div>
@@ -52,15 +41,15 @@ export default function AdminSettings() {
             <p className="text-sm text-gray-500">Provide direct image URLs for the homepage hero carousel.</p>
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">Slide 1 URL</label>
-              <input type="text" defaultValue="https://images.unsplash.com/photo-1514933651103-005eec06c04b?auto=format&fit=crop&q=80&w=2000" className="w-full border-gray-300 rounded-md shadow-sm focus:ring-red-500 focus:border-red-500 sm:text-sm" />
+              <input type="text" name="slide1" defaultValue={settings.slideshowImages[0] || ""} className="w-full border-gray-300 rounded-md shadow-sm focus:ring-red-500 focus:border-red-500 sm:text-sm" />
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">Slide 2 URL</label>
-              <input type="text" defaultValue="https://images.unsplash.com/photo-1550966871-3ed3cdb5ed0c?auto=format&fit=crop&q=80&w=2000" className="w-full border-gray-300 rounded-md shadow-sm focus:ring-red-500 focus:border-red-500 sm:text-sm" />
+              <input type="text" name="slide2" defaultValue={settings.slideshowImages[1] || ""} className="w-full border-gray-300 rounded-md shadow-sm focus:ring-red-500 focus:border-red-500 sm:text-sm" />
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">Slide 3 URL</label>
-              <input type="text" defaultValue="https://images.unsplash.com/photo-1551538827-9c037cb4f32a?auto=format&fit=crop&q=80&w=2000" className="w-full border-gray-300 rounded-md shadow-sm focus:ring-red-500 focus:border-red-500 sm:text-sm" />
+              <input type="text" name="slide3" defaultValue={settings.slideshowImages[2] || ""} className="w-full border-gray-300 rounded-md shadow-sm focus:ring-red-500 focus:border-red-500 sm:text-sm" />
             </div>
           </div>
         </section>
@@ -75,13 +64,13 @@ export default function AdminSettings() {
             <div className="space-y-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">Delivery Radius (Miles)</label>
-                <input type="number" defaultValue={10} className="w-full border-gray-300 rounded-md shadow-sm focus:ring-red-500 focus:border-red-500 sm:text-sm" />
+                <input type="number" name="deliveryRadiusMiles" defaultValue={settings.deliveryRadiusMiles} className="w-full border-gray-300 rounded-md shadow-sm focus:ring-red-500 focus:border-red-500 sm:text-sm" />
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1 flex items-center">
                   <Percent className="w-4 h-4 mr-1 text-gray-400" /> Tax Rate (%)
                 </label>
-                <input type="number" defaultValue={20} className="w-full border-gray-300 rounded-md shadow-sm focus:ring-red-500 focus:border-red-500 sm:text-sm" />
+                <input type="number" name="taxRate" defaultValue={settings.taxRate} className="w-full border-gray-300 rounded-md shadow-sm focus:ring-red-500 focus:border-red-500 sm:text-sm" />
               </div>
             </div>
           </section>
@@ -97,19 +86,19 @@ export default function AdminSettings() {
                 <label className="block text-sm font-medium text-gray-700 mb-1 flex items-center">
                   <Mail className="w-4 h-4 mr-1 text-gray-400" /> Contact Email
                 </label>
-                <input type="email" defaultValue="contact@royalbar.com" className="w-full border-gray-300 rounded-md shadow-sm focus:ring-red-500 focus:border-red-500 sm:text-sm" />
+                <input type="email" name="contactEmail" defaultValue={settings.contactEmail} className="w-full border-gray-300 rounded-md shadow-sm focus:ring-red-500 focus:border-red-500 sm:text-sm" />
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1 flex items-center">
                   <Phone className="w-4 h-4 mr-1 text-gray-400" /> Contact Phone
                 </label>
-                <input type="text" defaultValue="+44 20 7123 4567" className="w-full border-gray-300 rounded-md shadow-sm focus:ring-red-500 focus:border-red-500 sm:text-sm" />
+                <input type="text" name="contactPhone" defaultValue={settings.contactPhone} className="w-full border-gray-300 rounded-md shadow-sm focus:ring-red-500 focus:border-red-500 sm:text-sm" />
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1 flex items-center">
                   <MessageSquare className="w-4 h-4 mr-1 text-gray-400" /> Global Notice Banner
                 </label>
-                <input type="text" defaultValue="Welcome to Royal Bar! Enjoy free delivery on orders over £50." className="w-full border-gray-300 rounded-md shadow-sm focus:ring-red-500 focus:border-red-500 sm:text-sm" />
+                <input type="text" name="globalNotice" defaultValue={settings.globalNotice} className="w-full border-gray-300 rounded-md shadow-sm focus:ring-red-500 focus:border-red-500 sm:text-sm" />
               </div>
             </div>
           </section>
@@ -118,14 +107,9 @@ export default function AdminSettings() {
         <div className="flex justify-end pt-4 border-t">
           <button 
             type="submit" 
-            disabled={isSaving}
-            className="flex items-center px-6 py-3 bg-red-600 rounded-lg text-sm font-bold text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 disabled:opacity-70 transition"
+            className="flex items-center px-6 py-3 bg-red-600 rounded-lg text-sm font-bold text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition"
           >
-            {isSaving ? (
-              <span className="flex items-center"><span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2"></span> Saving...</span>
-            ) : (
-              <><Save className="w-4 h-4 mr-2" /> Save All Changes</>
-            )}
+            <Save className="w-4 h-4 mr-2" /> Save All Changes
           </button>
         </div>
       </form>

@@ -5,6 +5,7 @@ import { useSession } from "next-auth/react"
 import Link from "next/link"
 import Lottie from "lottie-react"
 import { User, MapPin, Gift, Clock, Download, RefreshCw, ShoppingBag, Settings, LogOut, ChevronRight } from "lucide-react"
+import { getUserOrders } from "../admin/actions"
 
 export default function AccountPage() {
   const { data: session, status } = useSession()
@@ -19,11 +20,12 @@ export default function AccountPage() {
       .then(data => setAnimationData(data))
       .catch(console.error)
 
-    if (session?.user) {
-      // Fetch user's orders (mocked for UI demonstration purposes)
-      // In a real app this would hit a /api/user/orders endpoint
-      setLoading(false)
-      setOrders([]) // Simulating empty order history to show the beautiful Lottie animation!
+    if (session?.user?.email) {
+      // Fetch user's actual orders
+      getUserOrders(session.user.email).then((userOrders) => {
+        setOrders(userOrders)
+        setLoading(false)
+      })
     } else if (status === "unauthenticated") {
       window.location.href = "/auth/signin"
     }
