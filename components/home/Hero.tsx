@@ -107,8 +107,8 @@ export default function Hero() {
             <Search className="w-6 h-6 text-zomato-muted mr-3" />
             <input
               type="text"
-              placeholder="Search for restaurant, cuisine or a dish (Press Enter)"
-              className="w-full bg-transparent border-0 focus:ring-0 text-zomato-text placeholder:text-zomato-muted text-lg outline-none"
+              placeholder="Search for a dish (Press Enter)"
+              className="w-full bg-transparent border-0 focus:ring-0 text-zomato-text placeholder:text-zomato-muted text-base md:text-lg outline-none"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               onFocus={() => setIsFocused(true)}

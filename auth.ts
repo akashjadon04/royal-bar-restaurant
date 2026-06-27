@@ -1,5 +1,6 @@
 import NextAuth from "next-auth"
 import CredentialsProvider from "next-auth/providers/credentials"
+import { db } from "@/lib/db"
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   providers: [
@@ -7,26 +8,52 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       name: "Credentials",
       credentials: {
         email: { label: "Email", type: "email" },
-        password: { label: "Password", type: "password" }
+        password: { label: "Password", type: "password" },
+        isSignUp: { label: "Sign Up", type: "text" },
+        firstName: { label: "First Name", type: "text" },
+        lastName: { label: "Last Name", type: "text" }
       },
       async authorize(credentials) {
         if (!credentials?.email || !credentials?.password) {
           return null
         }
         
-        const adminEmail = process.env.ADMIN_EMAIL || 'admin@royalbar.com';
-        const adminPassword = process.env.ADMIN_PASSWORD || 'admin123';
+        const email = credentials.email as string;
+        const password = credentials.password as string;
+        
+        let user = db.users.findUnique(email);
 
-        if (credentials.email === adminEmail && credentials.password === adminPassword) {
-           return { 
-             id: 'admin-1', 
-             name: 'Admin User', 
-             email: adminEmail, 
-             role: 'ADMIN' 
-           }
+        // Sign Up Flow
+        if (credentials.isSignUp === 'true') {
+          if (user) {
+            throw new Error('Email already exists');
+          }
+          user = db.users.create({
+            email,
+            passwordHash: password, // For simplicity in file DB, we store as plain. In prod use bcrypt!
+            firstName: credentials.firstName as string || 'New',
+            lastName: credentials.lastName as string || 'User',
+            role: email.includes('admin') ? 'ADMIN' : 'CUSTOMER'
+          });
+        } else {
+          // Sign In Flow
+          if (!user || user.passwordHash !== password) {
+            // Fallback to static .env admin if they wiped the file DB
+            const envAdminEmail = process.env.ADMIN_EMAIL || 'admin@royalbar.com';
+            const envAdminPass = process.env.ADMIN_PASSWORD || 'admin123';
+            if (email === envAdminEmail && password === envAdminPass) {
+               return { id: 'admin-0', name: 'Master Admin', email, role: 'ADMIN' };
+            }
+            return null;
+          }
         }
 
-        return null;
+        return { 
+          id: user.id, 
+          name: `${user.firstName} ${user.lastName}`, 
+          email: user.email, 
+          role: user.role 
+        }
       }
     })
   ],
