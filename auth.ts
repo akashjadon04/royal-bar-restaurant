@@ -1,7 +1,5 @@
 import NextAuth from "next-auth"
 import CredentialsProvider from "next-auth/providers/credentials"
-import prisma from "@/lib/prisma"
-import bcrypt from "bcryptjs"
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   providers: [
@@ -16,42 +14,19 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           return null
         }
         
-        const user = await prisma.user.findUnique({
-          where: { email: credentials.email as string }
-        })
+        const adminEmail = process.env.ADMIN_EMAIL || 'admin@royalbar.com';
+        const adminPassword = process.env.ADMIN_PASSWORD || 'admin123';
 
-        if (!user || !user.passwordHash) {
-          // If no user found, we can auto-create for demo, but since we have a signup, let's just fail
-          // Wait, user wants a demo login. Let's create an admin if email is admin
-          if (credentials.email === "admin@royalbar.com") {
-             const admin = await prisma.user.upsert({
-               where: { email: "admin@royalbar.com" },
-               update: {},
-               create: {
-                 email: "admin@royalbar.com",
-                 passwordHash: await bcrypt.hash(credentials.password as string, 10),
-                 firstName: "Admin",
-                 lastName: "User",
-                 role: "ADMIN"
-               }
-             });
-             return { id: admin.id, name: `${admin.firstName} ${admin.lastName}`, email: admin.email, role: admin.role }
-          }
-          return null;
+        if (credentials.email === adminEmail && credentials.password === adminPassword) {
+           return { 
+             id: 'admin-1', 
+             name: 'Admin User', 
+             email: adminEmail, 
+             role: 'ADMIN' 
+           }
         }
 
-        const isPasswordValid = await bcrypt.compare(credentials.password as string, user.passwordHash)
-
-        if (!isPasswordValid) {
-          return null
-        }
-
-        return {
-          id: user.id,
-          name: `${user.firstName} ${user.lastName}`,
-          email: user.email,
-          role: user.role
-        }
+        return null;
       }
     })
   ],

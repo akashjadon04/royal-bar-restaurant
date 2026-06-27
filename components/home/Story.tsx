@@ -3,6 +3,7 @@
 import { motion } from 'framer-motion';
 import Image from 'next/image';
 import Atropos from 'atropos/react';
+import 'atropos/css';
 import Lottie from 'lottie-react';
 import { useState, useEffect } from 'react';
 

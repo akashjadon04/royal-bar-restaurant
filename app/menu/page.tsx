@@ -20,11 +20,13 @@ function MenuContent() {
     setSearchQuery(searchParams.get('search') || '');
   }, [searchParams]);
 
-  const filteredItems = menuItems.filter(item => 
-    item.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    item.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    item.category.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  const filteredItems = menuItems.filter(item => {
+    const q = searchQuery.toLowerCase();
+    const matchesName = item.name?.toLowerCase().includes(q) || false;
+    const matchesDesc = item.description?.toLowerCase().includes(q) || false;
+    const matchesCat = (item as any).category?.toLowerCase().includes(q) || false;
+    return matchesName || matchesDesc || matchesCat;
+  });
 
   return (
     <div className="min-h-screen bg-white pt-32 pb-24">
