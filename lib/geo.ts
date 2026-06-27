@@ -37,7 +37,7 @@ export async function validateDeliveryRadius(
   addressId: string,
   userId: string
 ): Promise<{ valid: boolean; distance?: number; error?: string }> {
-  const { prisma } = await import('./prisma');
+  const prisma = (await import('./prisma')).default;
 
   const address = await prisma.address.findFirst({
     where: { id: addressId, userId },

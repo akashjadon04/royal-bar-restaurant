@@ -28,10 +28,10 @@ export async function POST(req: Request) {
     const lineItems: any[] = [];
 
     for (const cartItem of cart.items) {
-      const dbItem = dbItems.find((d) => d.id === cartItem.menuItemId);
+      const dbItem = dbItems.find((d: any) => d.id === cartItem.menuItemId);
       if (!dbItem) throw new Error('MenuItem not found');
 
-      const variant = dbItem.variants.find((v) => v.id === cartItem.variantId);
+      const variant = dbItem.variants?.find((v: any) => v.id === cartItem.variantId);
       const unitPrice = Number(dbItem.basePrice) + (variant ? Number(variant.priceDelta) : 0);
       const itemTotal = unitPrice * cartItem.quantity;
       serverSubtotal += itemTotal;
@@ -70,8 +70,8 @@ export async function POST(req: Request) {
         deliveryAddressId: addressId,
         items: {
           create: cart.items.map((item: any) => {
-            const dbItem = dbItems.find((d) => d.id === item.menuItemId)!;
-            const variant = dbItem.variants.find((v) => v.id === item.variantId);
+            const dbItem = dbItems.find((d: any) => d.id === item.menuItemId)!;
+            const variant = dbItem.variants?.find((v: any) => v.id === item.variantId);
             const unitPrice = Number(dbItem.basePrice) + (variant ? Number(variant.priceDelta) : 0);
             return {
               menuItemId: item.menuItemId,

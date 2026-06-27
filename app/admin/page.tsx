@@ -32,11 +32,11 @@ export default async function AdminPage() {
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
-              {orders.map(order => (
+              {orders.map((order: any) => (
                 <tr key={order.id}>
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{order.id.slice(-6).toUpperCase()}</td>
                   <td className="px-6 py-4 text-sm text-gray-500">
-                    {order.items.map(item => (
+                    {order.items.map((item: any) => (
                       <div key={item.id}>{item.quantity}x {item.menuItem.name}</div>
                     ))}
                   </td>
@@ -123,7 +123,7 @@ export default async function AdminPage() {
           <div className="bg-white p-6 rounded-lg shadow overflow-hidden h-[600px] overflow-y-auto">
             <h3 className="text-lg font-medium mb-4">Current Products</h3>
             <ul className="divide-y divide-gray-200">
-              {products.map(product => (
+              {products.map((product: any) => (
                 <li key={product.id} className="py-4 flex justify-between items-center">
                   <div className="flex items-center">
                     <img src={product.imageUrl || ''} alt="" className="h-10 w-10 rounded-full object-cover" />

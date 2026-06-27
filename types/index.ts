@@ -1,4 +1,6 @@
-import { OrderStatus, OrderType, UserRole } from '@prisma/client';
+export type OrderStatus = 'PENDING' | 'COOKING' | 'OUT_FOR_DELIVERY' | 'DELIVERED' | 'CANCELLED';
+export type OrderType = 'DELIVERY' | 'COLLECTION' | 'DINE_IN';
+export type UserRole = 'ADMIN' | 'CUSTOMER';
 
 export interface User {
   id: string;

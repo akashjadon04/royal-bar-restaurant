@@ -5,7 +5,7 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-export function formatPrice(price: number | string | Decimal): string {
+export function formatPrice(price: number | string | any): string {
   const num = typeof price === 'string' ? parseFloat(price) : Number(price);
   return new Intl.NumberFormat('en-GB', {
     style: 'currency',
