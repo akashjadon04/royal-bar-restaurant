@@ -2,11 +2,6 @@
 
 > A premium full-stack restaurant web application built with Next.js 15, Prisma, PostgreSQL, and Stripe.
 
-## Live Demo
-
-```bash
-# Coming soon — see "Getting Started" below to run locally
-```
 
 ## Features
 

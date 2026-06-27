@@ -25,7 +25,7 @@ export default function LocationGuard({ children }: { children: React.ReactNode 
   const [loading, setLoading] = useState(true);
   const { setOutOfRange, setDistance: setGlobalDistance } = useLocationStore();
 
-  // Parse env vars or use default (London Eye for demo)
+  // Parse env vars or use default (London Eye for development)
   const restaurantLat = parseFloat(process.env.NEXT_PUBLIC_RESTAURANT_LAT || '51.5033');
   const restaurantLng = parseFloat(process.env.NEXT_PUBLIC_RESTAURANT_LNG || '-0.1195');
 

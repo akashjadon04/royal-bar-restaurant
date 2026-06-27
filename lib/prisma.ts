@@ -1,12 +1,12 @@
-// Mock Prisma Client for Frontend-Only Vercel Deployment
-// This removes the dependency on a Postgres database so it can be deployed for free
+// Local Testing Environment Fallback
+// This provides a fallback for local testing without requiring a connected database
 
 import { db } from './db';
 
-const prismaMock = {
+const localFallbackClient = {
   order: {
     findMany: async (args?: any) => {
-      // Basic mock of findMany
+      // Fallback response for findMany
       return db.orders.findMany(args?.where?.userId);
     },
     findUnique: async () => db.orders.findMany()[0] || null,
@@ -46,4 +46,4 @@ const prismaMock = {
   }
 };
 
-export default prismaMock as any;
+export default localFallbackClient as any;

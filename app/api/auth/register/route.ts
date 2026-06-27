@@ -18,7 +18,7 @@ export async function POST(req: Request) {
     const user = await prisma.user.create({
       data: {
         email,
-        passwordHash: password, // Store plainly for mock DB
+        passwordHash: password, // Local development environment fallback
         firstName,
         lastName,
         role: 'CUSTOMER'

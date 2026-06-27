@@ -78,7 +78,7 @@ export async function deleteProduct(id: string) {
 }
 
 export async function updateSettings(data: FormData) {
-  // We can write to the custom DB directly here since prisma isn't aware of settings in the mock
+  // Write dynamic application settings to the local JSON store
   const { db } = await import("@/lib/db")
   
   const slide1 = data.get("slide1") as string

@@ -27,7 +27,7 @@ export default async function OrderConfirmedPage({ searchParams }: { searchParam
         <div className="absolute top-0 left-0 right-0 h-2 bg-green-500" />
         
         <div className="w-48 h-48 mx-auto mb-2">
-          {/* Lottie Animation 11: Success Checkmark */}
+
           <LottiePlayer src="/lottie/anim_11.json" className="w-full h-full" loop={false} />
         </div>
 

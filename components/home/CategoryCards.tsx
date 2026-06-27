@@ -52,7 +52,7 @@ export default function CategoryCards() {
           {categories.map((category) => {
             const CardContent = () => (
               <Link href={category.href} className="block w-full h-full relative rounded-2xl overflow-hidden group border border-white/20">
-                {/* Background Layer */}
+
                 <div className="absolute inset-0 z-0" data-atropos-offset="-5">
                   <Image
                     src={category.image}
@@ -64,7 +64,7 @@ export default function CategoryCards() {
                   />
                 </div>
                 
-                {/* Midground Gradient Overlay */}
+
                 <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent z-10" data-atropos-offset="0" />
                 
                 {category.popularNear && (
@@ -73,7 +73,7 @@ export default function CategoryCards() {
                   </div>
                 )}
 
-                {/* Foreground Content */}
+
                 <div className="absolute bottom-0 left-0 w-full p-8 text-white z-20 flex flex-col justify-end h-full pointer-events-none">
                   <h3 
                     className="text-4xl font-display font-bold mb-2 drop-shadow-xl" 
@@ -93,12 +93,12 @@ export default function CategoryCards() {
 
             return (
               <div key={category.id} className="relative w-full h-[240px] md:h-[320px]">
-                {/* Mobile View: Native Scroll, No Atropos */}
+
                 <div className="md:hidden w-full h-full rounded-2xl overflow-hidden shadow-card-hover">
                   <CardContent />
                 </div>
                 
-                {/* Desktop View: 3D Atropos Effect */}
+
                 <div className="hidden md:block w-full h-full">
                   <Atropos
                     className="w-full h-full rounded-2xl cursor-pointer"

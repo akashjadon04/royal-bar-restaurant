@@ -43,7 +43,7 @@ export default function Featured() {
           </Link>
         </div>
 
-        {/* Real-time Kitchen Status */}
+
         <div className="mb-12 bg-white rounded-2xl p-4 shadow-sm border border-gray-100 flex items-center justify-between animate-fade-in-up">
           <div className="flex items-center gap-4">
             <div className={`p-3 rounded-full ${kitchenBusy ? 'bg-orange-100 text-orange-600' : 'bg-green-100 text-green-600'}`}>
@@ -76,7 +76,7 @@ export default function Featured() {
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent opacity-80" data-atropos-offset="0" />
                 
-                {/* Rating Pill */}
+
                 <div 
                   data-atropos-offset="5"
                   className="absolute top-6 right-6 bg-white/20 backdrop-blur-md text-white border border-white/30 text-sm font-bold px-4 py-2 rounded-full flex items-center shadow-lg"
@@ -84,7 +84,7 @@ export default function Featured() {
                   {item.rating} <Star className="w-4 h-4 ml-1.5 fill-yellow-400 text-yellow-400" />
                 </div>
 
-                {/* Content inside image */}
+
                 <div className="absolute bottom-0 left-0 p-8 w-full" data-atropos-offset="8">
                   <h3 className="text-3xl font-display font-bold text-white mb-3 leading-tight drop-shadow-md">
                     {item.name}
@@ -101,12 +101,12 @@ export default function Featured() {
 
             return (
               <Link href={`/menu/${item.id}`} key={item.id} className="block group">
-                {/* Mobile View: No Atropos, Native Scroll */}
+
                 <div className="md:hidden shadow-card-hover rounded-[2rem] overflow-hidden">
                   <FeaturedContent />
                 </div>
 
-                {/* Desktop View: Atropos */}
+
                 <div className="hidden md:block">
                   <Atropos
                     activeOffset={40}

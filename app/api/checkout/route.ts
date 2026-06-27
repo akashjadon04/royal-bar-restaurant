@@ -3,7 +3,7 @@ import Stripe from 'stripe';
 import prisma from '@/lib/prisma';
 import { haversineDistance } from '@/lib/geo';
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || 'sk_test_dummy_key_for_build', {
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || 'sk_test_development_key', {
   // @ts-ignore
   apiVersion: '2024-06-20',
   typescript: true,
@@ -61,7 +61,7 @@ export async function POST(req: Request) {
 
     const order = await prisma.order.create({
       data: {
-        userId: 'demo-user',
+        userId: 'test-user',
         type: orderType,
         status: 'PENDING_PAYMENT',
         subtotal: serverSubtotal,
@@ -85,12 +85,12 @@ export async function POST(req: Request) {
       },
     });
 
-    const isDemoMode = process.env.STRIPE_SECRET_KEY === 'sk_test_dummy_key_for_build' || !process.env.STRIPE_SECRET_KEY;
+    const isTestMode = process.env.STRIPE_SECRET_KEY === 'sk_test_development_key' || !process.env.STRIPE_SECRET_KEY;
 
-    if (isDemoMode) {
-      // Demo Payment Flow: Redirect to a simulated checkout page
+    if (isTestMode) {
+      // Test Payment Flow: Redirect to a simulated checkout page
       return NextResponse.json({ 
-        sessionId: 'demo_session_' + order.id, 
+        sessionId: 'test_session_' + order.id, 
         url: `${process.env.NEXT_PUBLIC_URL || 'http://localhost:3000'}/checkout-demo?orderId=${order.id}`
       });
     }
@@ -101,7 +101,7 @@ export async function POST(req: Request) {
       line_items: lineItems,
       metadata: {
         order_id: order.id,
-        user_id: 'demo-user',
+        user_id: 'test-user',
       },
       success_url: `${process.env.NEXT_PUBLIC_URL}/order/confirmed?orderId=${order.id}`,
       cancel_url: `${process.env.NEXT_PUBLIC_URL}/cart?cancelled=1`,

@@ -57,7 +57,7 @@ export default function AccountPage() {
     <div className="min-h-screen bg-gray-50 pt-24 pb-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto flex flex-col md:flex-row gap-8">
         
-        {/* Sidebar Navigation */}
+
         <aside className="w-full md:w-64 shrink-0 space-y-2">
           <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 mb-6 text-center">
             <div className="h-20 w-20 bg-red-100 text-red-600 rounded-full flex items-center justify-center mx-auto mb-4 text-2xl font-bold">
@@ -91,7 +91,7 @@ export default function AccountPage() {
           </button>
         </aside>
 
-        {/* Main Content Area */}
+
         <main className="flex-1 space-y-6">
           
           {activeTab === 'orders' && (
@@ -147,7 +147,7 @@ export default function AccountPage() {
                 <button className="text-sm font-medium text-red-600 hover:text-red-700">Add New</button>
               </div>
               
-              {/* Interactive Address Book Mock */}
+              {/* Interactive Address Book Interface */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="border-2 border-red-600 rounded-xl p-4 relative cursor-pointer hover:shadow-md transition">
                   <span className="absolute top-4 right-4 text-xs font-bold text-red-600 bg-red-50 px-2 py-1 rounded">Default</span>
@@ -178,7 +178,7 @@ export default function AccountPage() {
                   <p className="text-red-100 text-sm font-medium mb-2 uppercase tracking-wider">Royal Rewards</p>
                   <h3 className="text-5xl font-display font-bold mb-4">1,240 <span className="text-xl font-normal opacity-80">Pts</span></h3>
                   
-                  {/* Dynamic Progress Bar */}
+
                   <div className="w-full bg-red-900/50 rounded-full h-3 mb-2">
                     <div className="bg-yellow-400 h-3 rounded-full" style={{ width: '60%' }}></div>
                   </div>

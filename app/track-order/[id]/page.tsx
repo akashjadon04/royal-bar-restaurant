@@ -58,7 +58,7 @@ export default function TrackOrderPage() {
 
   return (
     <div className="min-h-screen bg-[#fffbf7] pt-32 pb-24">
-      {/* Toast Notification */}
+
       <AnimatePresence>
         {statusNotification && (
           <motion.div 
@@ -75,7 +75,7 @@ export default function TrackOrderPage() {
       <div className="royal-container max-w-3xl">
         <div className="bg-white rounded-2xl shadow-zomato-subtle border border-zomato-border overflow-hidden">
           
-          {/* Map/Animation Area */}
+
           <div className="h-64 bg-[#f3f4f6] relative flex items-center justify-center overflow-hidden">
             <div className="absolute inset-0 opacity-20 pointer-events-none" style={{ backgroundImage: 'url("https://www.transparenttextures.com/patterns/cubes.png")' }}></div>
             {order.status === 'OUT_FOR_DELIVERY' && lottieData ? (
@@ -106,7 +106,7 @@ export default function TrackOrderPage() {
               </button>
             </div>
 
-            {/* Progress Tracker */}
+
             <div className="relative mb-12">
               <div className="absolute top-1/2 left-0 w-full h-1 bg-gray-200 -translate-y-1/2 rounded-full"></div>
               <div 
@@ -143,7 +143,7 @@ export default function TrackOrderPage() {
               </div>
             </div>
 
-            {/* Order Details Summary */}
+
             <div className="bg-gray-50 rounded-xl p-4">
                <h3 className="font-semibold text-gray-700 mb-2">Order Items</h3>
                <ul className="text-sm text-gray-600 space-y-1">

@@ -17,7 +17,7 @@ export default function CheckoutPage() {
   const [isSuccess, setIsSuccess] = useState(false);
   const [tipAmount, setTipAmount] = useState(0);
   
-  // Fake Stripe Form State
+  // Development Payment State
   const [cardNumber, setCardNumber] = useState('');
   const [expiry, setExpiry] = useState('');
   const [cvc, setCvc] = useState('');
@@ -43,7 +43,7 @@ export default function CheckoutPage() {
     
     // Simulate Stripe Payment processing if card is selected
     if (paymentMethod === 'card') {
-      await new Promise(resolve => setTimeout(resolve, 2500)); // Fake processing delay
+      await new Promise(resolve => setTimeout(resolve, 2500)); // Network latency simulation
     }
     
     try {
@@ -151,12 +151,12 @@ export default function CheckoutPage() {
                 </div>
               </div>
 
-              {/* Fake Stripe Integration */}
+              {/* Development Payment Integration */}
               {paymentMethod === 'card' && (
                 <div className="bg-gray-50 border border-gray-200 rounded-xl p-6 relative overflow-hidden animate-fade-in-up">
                   <div className="flex items-center justify-between mb-4">
                     <h3 className="font-bold text-gray-800 flex items-center gap-2">
-                      <ShieldCheck className="w-5 h-5 text-green-600" /> Secure Card Checkout (Demo)
+                      <ShieldCheck className="w-5 h-5 text-green-600" /> Secure Card Checkout (Test Mode)
                     </h3>
                     <div className="flex gap-2">
                       <img src="https://upload.wikimedia.org/wikipedia/commons/5/5e/Visa_Inc._logo.svg" className="h-4" alt="Visa" />

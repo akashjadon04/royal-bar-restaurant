@@ -7,7 +7,6 @@ datasource db {
   url      = "file:./dev.db"
 }
 
-// ─── CORE IDENTITY
 
 model User {
   id            String    @id @default(cuid())
@@ -31,7 +30,6 @@ model User {
   @@index([role])
 }
 
-// ─── GEOGRAPHY
 
 model Address {
   id          String  @id @default(cuid())
@@ -55,7 +53,6 @@ model Address {
   @@index([postcode])
 }
 
-// ─── MENU — MULTI-TIER TAXONOMY
 
 model Category {
   id          String    @id @default(cuid())
@@ -109,7 +106,6 @@ model MenuItemVariant {
   @@index([menuItemId])
 }
 
-// ─── TAGS & ALLERGENS
 
 model Tag {
   id        String @id @default(cuid())
@@ -155,7 +151,6 @@ model MenuItemAllergen {
   @@map("menu_item_allergens")
 }
 
-// ─── LIVE ORDER STATES
 
 model Order {
   id                String      @id @default(cuid())
@@ -215,7 +210,6 @@ model OrderStatusHistory {
   @@index([orderId, createdAt])
 }
 
-// ─── CART
 
 model CartItem {
   id          String   @id @default(cuid())
@@ -234,7 +228,6 @@ model CartItem {
   @@index([menuItemId])
 }
 
-// ─── REVIEWS
 
 model Review {
   id         String   @id @default(cuid())
@@ -253,7 +246,6 @@ model Review {
   @@index([menuItemId, rating])
 }
 
-// ─── STRIPE EVENTS
 
 model StripeEvent {
   id        String   @id

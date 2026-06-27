@@ -27,10 +27,10 @@ export default async function AdminOrders() {
         </div>
       </div>
 
-      {/* Kanban Board Container */}
+
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 overflow-x-auto pb-4">
         
-        {/* Column 1: Pending */}
+
         <div className="bg-gray-50 rounded-xl p-4 border border-gray-200 min-w-[300px]">
           <div className="flex items-center justify-between mb-4">
             <h3 className="font-bold text-gray-700 flex items-center">
@@ -54,7 +54,7 @@ export default async function AdminOrders() {
           </div>
         </div>
 
-        {/* Column 2: Cooking */}
+
         <div className="bg-gray-50 rounded-xl p-4 border border-gray-200 min-w-[300px]">
           <div className="flex items-center justify-between mb-4">
             <h3 className="font-bold text-gray-700 flex items-center">
@@ -71,7 +71,7 @@ export default async function AdminOrders() {
           </div>
         </div>
 
-        {/* Column 3: Out for Delivery */}
+
         <div className="bg-gray-50 rounded-xl p-4 border border-gray-200 min-w-[300px]">
           <div className="flex items-center justify-between mb-4">
             <h3 className="font-bold text-gray-700 flex items-center">
@@ -88,7 +88,7 @@ export default async function AdminOrders() {
           </div>
         </div>
 
-        {/* Column 4: Delivered */}
+
         <div className="bg-gray-50 rounded-xl p-4 border border-gray-200 min-w-[300px]">
           <div className="flex items-center justify-between mb-4">
             <h3 className="font-bold text-gray-700 flex items-center">

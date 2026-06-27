@@ -11,7 +11,7 @@ export default function DownloadApp() {
       <div className="royal-container max-w-5xl">
         <div className="flex flex-col md:flex-row items-center gap-12">
           
-          {/* Phone Mockup Image */}
+          {/* Phone Device Display */}
           <div className="w-full md:w-1/2 flex justify-center md:justify-end">
             <div className="relative w-[300px] h-[400px] overflow-hidden rounded-t-[40px] shadow-2xl border-[12px] border-white bg-white">
                <Image 
