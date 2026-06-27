@@ -1,0 +1,9 @@
+{
+  "name": "Royal Bar",
+  "short_name": "Royal Bar",
+  "description": "Experience Premium Dining & Drinks in London.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#e23744"
+}
