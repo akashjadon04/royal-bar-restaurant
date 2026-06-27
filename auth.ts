@@ -1,6 +1,6 @@
 import NextAuth from "next-auth"
 import CredentialsProvider from "next-auth/providers/credentials"
-import { db } from "@/lib/db"
+import prisma from "@/lib/prisma"
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   providers: [
@@ -21,24 +21,26 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         const email = credentials.email as string;
         const password = credentials.password as string;
         
-        let user = db.users.findUnique(email);
+        let user = await prisma.user.findUnique({ where: { email } });
 
         // Sign Up Flow
         if (credentials.isSignUp === 'true') {
           if (user) {
             throw new Error('Email already exists');
           }
-          user = db.users.create({
-            email,
-            passwordHash: password, // For simplicity in file DB, we store as plain. In prod use bcrypt!
-            firstName: credentials.firstName as string || 'New',
-            lastName: credentials.lastName as string || 'User',
-            role: email.includes('admin') ? 'ADMIN' : 'CUSTOMER'
+          user = await prisma.user.create({
+            data: {
+              email,
+              passwordHash: password, // For simplicity in file DB, we store as plain. In prod use bcrypt!
+              firstName: credentials.firstName as string || 'New',
+              lastName: credentials.lastName as string || 'User',
+              role: email.includes('admin') ? 'ADMIN' : 'CUSTOMER'
+            }
           });
         } else {
           // Sign In Flow
           if (!user || user.passwordHash !== password) {
-            // Fallback to static .env admin if they wiped the file DB
+            // Fallback to static .env admin if they wiped the DB
             const envAdminEmail = process.env.ADMIN_EMAIL || 'admin@royalbar.com';
             const envAdminPass = process.env.ADMIN_PASSWORD || 'admin123';
             if (email === envAdminEmail && password === envAdminPass) {

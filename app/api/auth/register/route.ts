@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { db } from '@/lib/db';
+import prisma from '@/lib/prisma';
 
 export async function POST(req: Request) {
   try {
@@ -9,18 +9,20 @@ export async function POST(req: Request) {
       return NextResponse.json({ success: false, message: 'Missing required fields' }, { status: 200 });
     }
 
-    const existingUser = db.users.findUnique(email);
+    const existingUser = await prisma.user.findUnique({ where: { email } });
 
     if (existingUser) {
       return NextResponse.json({ success: false, message: 'Email already in use' }, { status: 200 });
     }
 
-    const user = db.users.create({
-      email,
-      passwordHash: password, // Store plainly for mock DB
-      firstName,
-      lastName,
-      role: 'CUSTOMER'
+    const user = await prisma.user.create({
+      data: {
+        email,
+        passwordHash: password, // Store plainly for mock DB
+        firstName,
+        lastName,
+        role: 'CUSTOMER'
+      }
     });
 
     return NextResponse.json({

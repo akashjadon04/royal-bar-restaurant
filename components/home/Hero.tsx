@@ -56,6 +56,7 @@ export default function Hero() {
                 alt={slide.title}
                 fill sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                 priority
+                unoptimized
                 className="object-cover object-center scale-105 animate-[float_20s_ease-in-out_infinite]"
               />
               <div className="absolute inset-0 bg-dark-overlay mix-blend-multiply" />
