@@ -19,7 +19,6 @@ export default function Story() {
 
   return (
     <section className="py-24 bg-[#0a0a0f] text-white relative overflow-hidden">
-      {/* Background Graphic Elements */}
       <div className="absolute top-0 right-0 w-1/2 h-full bg-gradient-to-l from-zomato-red/10 to-transparent pointer-events-none" />
       <div className="absolute -bottom-32 -left-32 w-96 h-96 bg-zomato-red/20 rounded-full blur-[100px] pointer-events-none" />
       
