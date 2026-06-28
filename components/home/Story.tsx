@@ -4,9 +4,19 @@ import { motion } from 'framer-motion';
 import Image from 'next/image';
 import Atropos from 'atropos/react';
 import 'atropos/css';
+import Lottie from 'lottie-react';
+import { useState, useEffect } from 'react';
 
 export default function Story() {
-  
+  const [animationData, setAnimationData] = useState(null);
+
+  useEffect(() => {
+    fetch('/lottie-story.json')
+      .then(res => res.json())
+      .then(setAnimationData)
+      .catch(() => {});
+  }, []);
+
   return (
     <section className="py-24 bg-[#0a0a0f] text-white relative overflow-hidden">
       <div className="absolute top-0 right-0 w-1/2 h-full bg-gradient-to-l from-zomato-red/10 to-transparent pointer-events-none" />
@@ -62,14 +72,22 @@ export default function Story() {
               highlight={true}
             >
               <div className="w-full h-full relative rounded-3xl overflow-hidden border border-white/10 group bg-[#111115] flex items-center justify-center">
-                <Image src="https://images.unsplash.com/photo-1577106263724-2c8e03bfe9cf?q=80&w=800&auto=format&fit=crop" alt="Chef cooking" fill className="object-cover scale-110 group-hover:scale-100 transition-transform duration-1000" data-atropos-offset="-5" />
+                {animationData ? (
+                  <Lottie 
+                    animationData={animationData} 
+                    className="w-full h-full scale-125 object-cover opacity-80 group-hover:scale-110 transition-transform duration-1000" 
+                    data-atropos-offset="-5" 
+                  />
+                ) : (
+                  <div className="w-full h-full bg-[#111115]" />
+                )}
                 
                 <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0f] via-[#0a0a0f]/40 to-transparent pointer-events-none" data-atropos-offset="0" />
                 
                 <div className="absolute bottom-8 left-8 right-8 z-20 pointer-events-none" data-atropos-offset="8">
                   <div className="glass-effect p-6 rounded-2xl border border-white/10 backdrop-blur-md">
                     <p className="text-white font-medium text-lg italic">
-                      "An absolute pinnacle of fine dining. The ambiance, the cocktails, the food�flawless."
+                      "An absolute pinnacle of fine dining. The ambiance, the cocktails, the food—flawless."
                     </p>
                     <div className="mt-4 flex items-center gap-3">
                       <div className="w-10 h-10 rounded-full overflow-hidden relative">
