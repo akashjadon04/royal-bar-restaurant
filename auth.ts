@@ -1,6 +1,7 @@
 import NextAuth from "next-auth"
 import CredentialsProvider from "next-auth/providers/credentials"
 import prisma from "@/lib/prisma"
+import bcrypt from "bcryptjs"
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   providers: [
@@ -39,7 +40,16 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           });
         } else {
           // Sign In Flow
-          if (!user || user.passwordHash !== password) {
+          let isValid = false;
+          if (user && user.passwordHash) {
+            if (user.passwordHash.startsWith('$2')) {
+              isValid = await bcrypt.compare(password, user.passwordHash);
+            } else {
+              isValid = (user.passwordHash === password);
+            }
+          }
+          
+          if (!user || !isValid) {
             // Fallback to static .env admin if they wiped the DB
             const envAdminEmail = process.env.ADMIN_EMAIL || 'admin@royalbar.com';
             const envAdminPass = process.env.ADMIN_PASSWORD || 'admin123';
