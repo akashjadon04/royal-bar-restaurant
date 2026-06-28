@@ -26,7 +26,7 @@ const signatureCollections = [
     subtitle: 'Fresh & vibrant',
     items: [
       { slug: 'royal-seafood-platter', image: 'https://images.unsplash.com/photo-1534080564583-6be75777b70a?q=100&w=2560&auto=format&fit=crop' },
-      { slug: 'pan-seared-scallops', image: 'https://images.unsplash.com/photo-1579240803525-2e6fb0a5b822?q=100&w=2560&auto=format&fit=crop' },
+      { slug: 'pan-seared-scallops', image: 'https://images.unsplash.com/photo-1414235077428-338989a2e8c0?q=100&w=2560&auto=format&fit=crop' },
       { slug: 'caviar-blinis', image: 'https://images.unsplash.com/photo-1580554530778-cb3bdf1e8de8?q=100&w=2560&auto=format&fit=crop' },
     ],
     className: 'col-span-1 md:col-span-1 md:row-span-1 h-[240px]',

@@ -4,18 +4,8 @@ import { motion } from 'framer-motion';
 import Image from 'next/image';
 import Atropos from 'atropos/react';
 import 'atropos/css';
-import Lottie from 'lottie-react';
-import { useState, useEffect } from 'react';
 
 export default function Story() {
-  const [animationData, setAnimationData] = useState(null);
-
-  useEffect(() => {
-    fetch('https://assets3.lottiefiles.com/packages/lf20_jrvsqqza.json')
-      .then(res => res.json())
-      .then(setAnimationData)
-      .catch(() => {});
-  }, []);
 
   return (
     <section className="py-24 bg-[#0a0a0f] text-white relative overflow-hidden">
@@ -72,16 +62,7 @@ export default function Story() {
               highlight={true}
             >
               <div className="w-full h-full relative rounded-3xl overflow-hidden border border-white/10 group bg-[#111115] flex items-center justify-center">
-                {animationData ? (
-                  <Lottie 
-                    animationData={animationData} 
-                    className="w-full h-full scale-125 object-cover opacity-80 group-hover:scale-110 transition-transform duration-1000" 
-                    data-atropos-offset="-5" 
-                  />
-                ) : (
-                  <div className="w-full h-full bg-[#111115]" />
-                )}
-                
+                <iframe src="https://lottie.host/embed/8c5750d4-1a3b-4869-90bc-3ab129f1b402/qN5iFm5X9A.json" className="w-full h-full scale-125 border-none opacity-80 group-hover:scale-110 transition-transform duration-1000" data-atropos-offset="-5"></iframe>
                 <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0f] via-[#0a0a0f]/40 to-transparent pointer-events-none" data-atropos-offset="0" />
               </div>
             </Atropos>
