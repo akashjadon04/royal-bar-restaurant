@@ -16,6 +16,7 @@ const signatureCollections = [
       { slug: 'wagyu-beef-fillet', image: 'https://images.unsplash.com/photo-1600891964092-4316c288032e?q=100&w=2560&auto=format&fit=crop' },
       { slug: 'lobster-thermidor', image: 'https://images.unsplash.com/photo-1565557623262-b51c2513a641?q=100&w=2560&auto=format&fit=crop' },
       { slug: 'truffle-risotto', image: 'https://images.unsplash.com/photo-1473093295043-cdd812d0e601?q=100&w=2560&auto=format&fit=crop' },
+      { slug: 'rack-of-lamb', image: 'https://images.unsplash.com/photo-1544025162-d76694265947?q=100&w=2560&auto=format&fit=crop' },
     ],
     className: 'col-span-1 md:col-span-2 md:row-span-2 h-[350px] md:h-[500px]',
   },
@@ -25,7 +26,8 @@ const signatureCollections = [
     subtitle: 'Fresh & vibrant',
     items: [
       { slug: 'royal-seafood-platter', image: 'https://images.unsplash.com/photo-1534080564583-6be75777b70a?q=100&w=2560&auto=format&fit=crop' },
-      { slug: 'pan-seared-scallops', image: 'https://images.unsplash.com/photo-1599901860904-17e6ed7083a0?q=100&w=2560&auto=format&fit=crop' },
+      { slug: 'pan-seared-scallops', image: 'https://images.unsplash.com/photo-1579240803525-2e6fb0a5b822?q=100&w=2560&auto=format&fit=crop' },
+      { slug: 'caviar-blinis', image: 'https://images.unsplash.com/photo-1580554530778-cb3bdf1e8de8?q=100&w=2560&auto=format&fit=crop' },
     ],
     className: 'col-span-1 md:col-span-1 md:row-span-1 h-[240px]',
   },
@@ -39,19 +41,30 @@ const signatureCollections = [
     ],
     className: 'col-span-1 md:col-span-1 md:row-span-1 h-[240px]',
   },
+  {
+    id: 4,
+    title: 'Divine Desserts',
+    subtitle: 'Sweet endings',
+    items: [
+      { slug: 'chocolate-fondant', image: 'https://images.unsplash.com/photo-1551024601-bec78aea704b?q=100&w=2560&auto=format&fit=crop' },
+      { slug: 'creme-brulee', image: 'https://images.unsplash.com/photo-1473093226795-af9932fe5856?q=100&w=2560&auto=format&fit=crop' },
+    ],
+    className: 'col-span-1 md:col-span-3 md:row-span-1 h-[280px]',
+  },
 ];
 
 export default function Collections() {
   const [activeIndices, setActiveIndices] = useState<Record<number, number>>({
-    1: 0, 2: 0, 3: 0
+    1: 0, 2: 0, 3: 0, 4: 0
   });
 
   useEffect(() => {
     const timer1 = setInterval(() => setActiveIndices(prev => ({ ...prev, 1: (prev[1] + 1) % signatureCollections[0].items.length })), 7000);
     const timer2 = setInterval(() => setActiveIndices(prev => ({ ...prev, 2: (prev[2] + 1) % signatureCollections[1].items.length })), 5500);
     const timer3 = setInterval(() => setActiveIndices(prev => ({ ...prev, 3: (prev[3] + 1) % signatureCollections[2].items.length })), 6000);
+    const timer4 = setInterval(() => setActiveIndices(prev => ({ ...prev, 4: (prev[4] + 1) % signatureCollections[3].items.length })), 6500);
     
-    return () => { clearInterval(timer1); clearInterval(timer2); clearInterval(timer3); };
+    return () => { clearInterval(timer1); clearInterval(timer2); clearInterval(timer3); clearInterval(timer4); };
   }, []);
 
   return (

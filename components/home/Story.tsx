@@ -11,7 +11,7 @@ export default function Story() {
   const [animationData, setAnimationData] = useState(null);
 
   useEffect(() => {
-    fetch('/lottie-story.json')
+    fetch('https://assets3.lottiefiles.com/packages/lf20_jrvsqqza.json')
       .then(res => res.json())
       .then(setAnimationData)
       .catch(() => {});
@@ -83,23 +83,6 @@ export default function Story() {
                 )}
                 
                 <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0f] via-[#0a0a0f]/40 to-transparent pointer-events-none" data-atropos-offset="0" />
-                
-                <div className="absolute bottom-8 left-8 right-8 z-20 pointer-events-none" data-atropos-offset="8">
-                  <div className="glass-effect p-6 rounded-2xl border border-white/10 backdrop-blur-md">
-                    <p className="text-white font-medium text-lg italic">
-                      "An absolute pinnacle of fine dining. The ambiance, the cocktails, the food—flawless."
-                    </p>
-                    <div className="mt-4 flex items-center gap-3">
-                      <div className="w-10 h-10 rounded-full overflow-hidden relative">
-                        <Image src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=200&q=80" alt="Reviewer" fill className="object-cover" />
-                      </div>
-                      <div>
-                        <div className="text-white font-bold text-sm">Sarah Jenkins</div>
-                        <div className="text-[#c5a47e] text-xs font-medium">Food Critic</div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
               </div>
             </Atropos>
           </motion.div>
