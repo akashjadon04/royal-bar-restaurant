@@ -19,10 +19,13 @@ export default function SignIn() {
       email,
       password,
     });
-    if (res?.ok) {
+    
+    if (res?.error) {
+      alert('Invalid credentials');
+    } else if (res?.ok) {
       window.location.href = '/'; // Hard redirect ensures Navbar session refreshes
     } else {
-      alert('Invalid credentials');
+      alert('Login failed. Please try again.');
     }
   };
 
