@@ -62,7 +62,13 @@ export default function Story() {
               highlight={true}
             >
               <div className="w-full h-full relative rounded-3xl overflow-hidden border border-white/10 group bg-[#111115] flex items-center justify-center">
-                <iframe src="https://lottie.host/embed/8c5750d4-1a3b-4869-90bc-3ab129f1b402/qN5iFm5X9A.json" className="w-full h-full scale-125 border-none opacity-80 group-hover:scale-110 transition-transform duration-1000" data-atropos-offset="-5"></iframe>
+                <Image 
+                  src="https://images.unsplash.com/photo-1577219491135-ce391730fb2c?q=100&w=2560&auto=format&fit=crop" 
+                  alt="Master Chef Cooking"
+                  fill 
+                  className="object-cover opacity-80 group-hover:scale-110 transition-transform duration-1000" 
+                  data-atropos-offset="-5" 
+                />
                 <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0f] via-[#0a0a0f]/40 to-transparent pointer-events-none" data-atropos-offset="0" />
               </div>
             </Atropos>
